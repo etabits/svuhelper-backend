@@ -2,7 +2,7 @@ express = require('express')
 app = express()
 
 mongoose = require('mongoose')
-mongoConnectionString = process.env.MONGO_URL || 'mongodb://localhost/svu-helpers'
+mongoConnectionString = process.env.MONGO_URL || 'mongodb://localhost/svu-helper'
 mongoose.connect(mongoConnectionString)
 
 jsonMiddleware = require('body-parser').json()
