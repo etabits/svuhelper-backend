@@ -19,9 +19,9 @@ studentsRouter.use (req, res, next)->
 		req.studentObject = stud
 		next()
 
-studentsRouter.get '/exams', (req, res, next)->
-	console.log('ABC')
-	req.studentObject.get 'exams', {}, (err, data)->
+studentsRouter.get '/:section(exams|results)', (req, res, next)->
+	console.log req.params
+	req.studentObject.get req.params.section, {}, (err, data)->
 		res.json({success: true, data: data})
 
 v0 = express.Router()
@@ -41,8 +41,10 @@ v0.use '/student', studentsRouter
 app.use '/v0', v0
 
 app.use (err, req, res, next)->
-	console.log err, req.body
+	console.log err, req.url, req.body
+	console.log err.stack
 	res.status(400)
 	res.send {success: false, errorMessage: 'Bad Request'}
 
-app.listen(5757);
+app.listen 5757, ()->
+	console.log 'Started!'

@@ -22,6 +22,16 @@ Actions['classes'] = {
 		data = htmlUtils.tableToData(table)
 		cb(null, data)
 }
+Actions['results'] = {
+	url: ()-> "#{baseUrl}/ams.php"
+	params: ()-> {}
+	
+	handler: (student, $, params, cb)->
+		table = $('table[border=1]').eq(0)
+		data = htmlUtils.tableToData(table)
+		data = _.chain(data).select( (e)->'Done'==e.Status && e.Action ).sortBy(['Start Time']).value()
+		cb(null, data)
+}
 Actions['exams'] = {
 	params: (student, options)->
 		{
