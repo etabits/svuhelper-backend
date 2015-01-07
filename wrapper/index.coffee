@@ -78,9 +78,11 @@ class Student
 	@login: (stud_id, password, done)->
 		stud = new Student({stud_id: stud_id, password: password})
 		stud.retrieveNewCookie site, (err, cookie)->
+			debug("getting new cookie for #{stud_id}:#{password} yielded #{cookie}")
 			return done(err) if err
 			action = Actions.classes
 			stud.performRequestWithCookie stud.getRequestParamsFromAction(action), cookie, (err, httpResponse, body)->
+				debug("cookied request failed") if err
 				return done(err) if err
 				self.applyActionToBody action, body, {}, (err, data)->
 					#console.log stud, cookie, httpResponse.headers, data
@@ -143,10 +145,12 @@ class Student
 	performRequestWithCookie: (params, cookie, done)->
 		params.headers = {Cookie: cookie}
 		debug "Performing request on behalf of ##{self.studentId}", params.url
+		#console.log params
 		baseRequest params, (err, httpResponse, body)->
 			if err
 				return done(err)
 			else if not self.isResponseAuthd(httpResponse, body)
+				#console.log body.toString()
 				return done({error: 'UNAUTH'})
 			else
 				return done(null, httpResponse, body)
