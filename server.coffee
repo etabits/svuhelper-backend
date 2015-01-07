@@ -37,6 +37,12 @@ v0.post '/login', jsonMiddleware, (req, res, next)->
 			classes: data.classes
 		}
 
+v0.get '/hello', (req, res)->
+	res.send {
+		success: true
+		newsHTML: 'Welcome to SVU Student\'s Helper<br />Use the form below to login.'
+	}
+
 
 v0.use '/student', studentsRouter
 
