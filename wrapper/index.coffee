@@ -12,6 +12,7 @@ htmlUtils = require('./htmlUtils')
 
 _ = require('lodash')
 
+toTitleCase = (str)-> str.replace(/_/g, ' ').replace /(?:^|_)[a-z]/g, (m) -> m.replace(/^_/, ' ').toUpperCase()
 Actions = {}
 Actions['classes'] = {
 	url: ()-> "#{baseUrl}/std_classes.php"
@@ -20,6 +21,27 @@ Actions['classes'] = {
 	handler: (student, $, params, cb)->
 		table = $('table table table').eq(0)
 		data = htmlUtils.tableToData(table)
+		data = data.map (c)->
+			details = c.Class.match(/^(...)_(.{2,6})_C(\d+)_((?:F|S)\d{2})$/)
+			if not details
+				console.log c
+				details={}
+			{
+				class: parseInt(details[3])
+				tutor: {
+					name: c.Tutor
+					email: c['Tutor mail']
+				}
+				term: {
+					code: details[4]
+				}
+				course: {
+					program: details[1]
+					code: details[2]
+					name: c.Course
+				}
+			}
+
 		cb(null, data)
 }
 Actions['results'] = {
@@ -29,7 +51,26 @@ Actions['results'] = {
 	handler: (student, $, params, cb)->
 		table = $('table[border=1]').eq(0)
 		data = htmlUtils.tableToData(table)
-		data = _.chain(data).select( (e)->'Done'==e.Status && e.Action ).sortBy(['Start Time']).value()
+		#data = _.chain(data).select( (e)->'Done'==e.Status && e.Action ).sortBy(['Start Time']).value()
+		data = data.map (r)->
+			details = r.Assessment.match(/^(...)_(.{2,7})_(?:(?:(?:F|S)\d{2})?C\d+_)+((?:F|S)\d{2})_(.+)_\d{4}-\d{2}-\d{2}/)
+			if not details
+				console.log r.Assessment
+				details = []
+			{
+				grade: parseFloat(r.Action)
+				date: new Date(r['Start Time'].replace(' ', 'T'))
+				status: r.Status
+				label: toTitleCase(details[4])
+				course: {
+					program: details[1]
+					code: details[2]
+				}
+				term: {
+					code: details[3]
+				}
+			}
+		data = _.chain(data).select( (e)->'Done'==e.status && e.grade ).sortBy('date').value().reverse()
 		cb(null, data)
 }
 Actions['exams'] = {
@@ -51,11 +92,23 @@ Actions['exams'] = {
 		}
 	handler: (student, $, params, cb)->
 		table = $('#tt4').eq(0)
-		data = _.chain(htmlUtils.tableToData(table)).reject( (e)-> !e.Start ).sortBy(['Date', 'Start']).value()
+		data = _.chain(htmlUtils.tableToData(table)).reject( (e)-> !e.Start ).value()
+		#.sortBy(['Date', 'Start']).value()
+		data = data.map (c)->
+			{
+				course: {
+					code: c.Course
+				}
+				date: new Date(c.Date+'T'+c.Start)
+				telecenter: {
+					name: c.TELECENTER_NAME
+				}
+			}
+		data = _.chain(data).sortBy('date').value()
 		cb(null, data)
 }
 site = 'mainCookie'
-User = require './User'
+User = require '../models/User'
 
 baseUrl = 'https://www.svuonline.org/isis'
 
