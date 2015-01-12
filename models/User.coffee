@@ -8,8 +8,14 @@ schema = mongoose.Schema {
 
 	mainCookie:	{type: String, default: ''}
 	moodleCookie:	{type: String, default: ''}
+
+	lastLogin: Date
+	lastActivity: Date
 }
 
+schema.pre 'save', (next)->
+	this.lastLogin = new Date() if this.isModified('sessionToken')
+	next()
 
 Model = mongoose.model('User', schema)
 

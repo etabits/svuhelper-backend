@@ -168,6 +168,7 @@ class Student
 
 
 	getOrCreateDbObject: (done)->
+		return done(null, self.doc) if self.doc
 		debug "Getting db object for ##{self.studentId}"
 		User.findById self.studentId, (err, doc)->
 			self.doc = doc

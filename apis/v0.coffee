@@ -7,6 +7,10 @@ studentsRouter.use (req, res, next)->
 
 		console.log(stud)
 		req.studentObject = stud
+		#console.log req.studentObject.doc
+		req.studentObject.doc.lastActivity = new Date()
+		req.on 'end', ()->
+			req.studentObject.doc.save()
 		next()
 
 dataFixers = {
