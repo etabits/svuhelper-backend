@@ -7,7 +7,7 @@ schema = mongoose.Schema {
 	password: ''
 
 	mainCookie:	{type: String, default: ''}
-	moodleCookie:	{type: String, default: ''}
+	moodleToken:{type: String, default: ''}
 
 	lastLogin: Date
 	lastActivity: Date

@@ -1,6 +1,7 @@
 #!/bin/bash
+
 password=$(mongo 'svu-helper' --quiet --eval 'db.users.findOne({_id:29643}).password')
-token=$(mongo 'svu-helper' --quiet --eval 'db.users.findOne({_id:29643}).sessionToken')
+token=$(mongo 'svu-helper' --quiet --eval "db.users.findOne({_id:$2}).sessionToken")
 baseURI='http://127.0.0.1:5757/v0'
 curl='curl --silent'
 action=$1
@@ -24,7 +25,7 @@ login() {
 stderr Doing $action
 if [ "loginAs" == "$action" ]; then
 	login "$2" "$3"
-elif [ "results" == "$action" ]; then
+elif [ "login" == "$action" ]; then
 	login "hasan_29643" $password
 elif [ "results" == "$action" ]; then
 	request "student/results"

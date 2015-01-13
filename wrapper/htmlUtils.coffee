@@ -1,4 +1,8 @@
 _ = require('lodash')
+debug = require('debug')('svu:debug')
+error = require('debug')('svu:error')
+error.log = console.error.bind(console)
+
 htmlUtils = {}
 
 htmlUtils.tableToData = (table)->
@@ -15,6 +19,7 @@ htmlUtils.tableToData = (table)->
 		else
 			#console.log labels
 			data.push(_.zipObject(keys, labels))
+	debug("Data extraction from table yielded #{data.length} rows")
 	data
 
 

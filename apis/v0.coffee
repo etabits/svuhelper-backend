@@ -1,11 +1,15 @@
 _ = require('lodash')
+debug = require('debug')('svu:debug')
+error = require('debug')('svu:error')
+error.log = console.error.bind(console)
+
 
 studentsRouter = etabits.express.Router()
 studentsRouter.use (req, res, next)->
 	etabits.svu.Student.restoreFromToken req.query.token, (err, stud)->
 		return next(err) if err
 
-		console.log(stud)
+		#console.log(stud)
 		req.studentObject = stud
 		#console.log req.studentObject.doc
 		req.studentObject.doc.lastActivity = new Date()
@@ -22,8 +26,10 @@ dataFixers = {
 }
 
 studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
-	console.log req.params
+	#console.log req.params
 	req.studentObject.get req.params.section, {}, (err, data)->
+		return next(err) if err
+		debug("Got #{data.length} data array for #{req.studentObject.studentId}/#{req.params.section}")
 		#data = data.map(dataFixers[req.params.section])
 		res.json({success: true, data: data})
 

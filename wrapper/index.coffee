@@ -1,4 +1,5 @@
 request = require('request')
+moodleRequest = request.defaults({json: true})
 baseRequest = request.defaults({followRedirect: false, encoding: null})
 get = baseRequest
 post = baseRequest.defaults({method: 'POST'})
@@ -7,33 +8,37 @@ encoding = require("encoding")
 cheerio = require('cheerio')
 crypto = require('crypto')
 
-debug = require('debug')('svu')
 htmlUtils = require('./htmlUtils')
+debug = require('debug')('svu:debug')
+error = require('debug')('svu:error')
+error.log = console.error.bind(console)
+
 
 _ = require('lodash')
 
 toTitleCase = (str)-> if str then str.replace(/_/g, ' ').replace /(?:^|_)[a-z]/g, (m) -> m.replace(/^_/, ' ').toUpperCase() else ''
 Actions = {}
 Actions['classes'] = {
-	url: ()-> "#{baseUrl}/std_classes.php"
-	params: ()-> {}
+	params: ()-> {url: "#{baseUrl}/std_classes.php"}
 	
-	handler: (student, $, params, cb)->
-		table = $('table table table').eq(0)
+	handler: (student, results, cb)->
+		table = results.classes('table table table').eq(0)
 		data = htmlUtils.tableToData(table)
 		data = data.map (c)->
-			details = c.Class.match(/^(...)_(.{2,6})_C(\d+)_((?:F|S)\d{2})$/)
+			details = c.Class.match(/^(.{2,4})_(.{2,6}).+C(\d+)_/)
 			if not details
-				console.log c
+				error("Could not match class", c.Class, c)
+				#console.log c
 				details={}
 			{
+				#orig: c
 				class: parseInt(details[3]) || 0
 				tutor: {
 					name: c.Tutor
 					email: c['Tutor mail']
 				}
 				term: {
-					code: details[4] || 'F99'
+					code: c.Term
 				}
 				course: {
 					program: details[1] || ''
@@ -44,21 +49,23 @@ Actions['classes'] = {
 
 		cb(null, data)
 }
+FourMonths = 4 * 30 * 86400 * 1000
 Actions['results'] = {
-	url: ()-> "#{baseUrl}/ams.php"
-	params: ()-> {}
+	params: ()-> [
+			{url: "#{baseUrl}/ams.php", $name: 'main'}
+		]
 	
-	handler: (student, $, params, cb)->
-		table = $('table[border=1]').eq(0)
+	handler: (student, results, cb)->
+		table = results.main('table[border=1]').eq(0)
 		data = htmlUtils.tableToData(table)
 		#data = _.chain(data).select( (e)->'Done'==e.Status && e.Action ).sortBy(['Start Time']).value()
 		data = data.map (r)->
-			details = r.Assessment.match(/^(...)_(.{2,7})_(?:(?:(?:F|S)\d{2})?C\d+_)+((?:F|S)\d{2})_(.+)_\d{4}-\d{2}-\d{2}/)
+			details = r.Assessment.match(/^(.{2,4})_(.{2,7})_(?:(?:(?:F|S)\d{2})?(?:C|c)\d+_)+((?:F|S)\d{2})_(.+)_\d{4}-\d{2}-\d{2}/)
 			if not details
-				console.log r.Assessment
-				details = []
+				error("Could not match assessment", r.Assessment, r)
+				details = {}
 			{
-				grade: parseFloat(r.Action)
+				grade: if r.Action == '' then null else parseFloat(r.Action)
 				date: new Date(r['Start Time'].replace(' ', 'T'))
 				status: r.Status
 				label: toTitleCase(details[4])
@@ -70,7 +77,11 @@ Actions['results'] = {
 					code: details[3]
 				}
 			}
-		data = _.chain(data).select( (e)->'Done'==e.status && e.grade ).sortBy('date').value().reverse()
+		#console.log(data)
+		now = new Date()
+		data = _.chain(data)
+			.select( (e)->('Done'==e.status || 'S14'==e.term.code || ((now-e.date)< FourMonths))  && e.grade!=null )
+			.sortBy('date').value().reverse()
 		cb(null, data)
 }
 Actions['exams'] = {
@@ -90,9 +101,12 @@ Actions['exams'] = {
 			}
 			method: 'POST'
 		}
-	handler: (student, $, params, cb)->
-		table = $('#tt4').eq(0)
-		data = _.chain(htmlUtils.tableToData(table)).reject( (e)-> !e.Start ).value()
+	handler: (student, results, cb)->
+		table = results.exams('#tt4').eq(0)
+		data = htmlUtils.tableToData(table)
+		#debug "Got #{data.length} table rows from #{student.studentId} exams result"
+		#console.log data
+		data = _.chain(data).reject( (e)-> !e.Start ).value()
 		#.sortBy(['Date', 'Start']).value()
 		data = data.map (c)->
 			{
@@ -130,26 +144,37 @@ class Student
 
 	@login: (stud_id, password, done)->
 		stud = new Student({stud_id: stud_id, password: password})
-		stud.retrieveNewCookie site, (err, cookie)->
-			debug("getting new cookie for #{stud_id}:#{password} yielded #{cookie}")
+		stud.getOrCreateDbObject (err, doc)->
 			return done(err) if err
-			action = Actions.classes
-			stud.performRequestWithCookie stud.getRequestParamsFromAction(action), cookie, (err, httpResponse, body)->
-				debug("cookied request failed") if err
+
+			async.parallel {
+				token: (done)-> crypto.randomBytes 18, done
+				classes: (done)->
+					stud.retrieveNewCookie site, (err, cookie)->
+						debug("getting new cookie for #{stud_id}:#{password} yielded #{cookie}")
+						return done(err) if err
+						action = Actions.classes
+						stud.performRequestWithCookie action.params(), cookie, (err, httpResponse, body)->
+							debug("cookied request failed") if err
+							return done(err) if err
+							doc.mainCookie = cookie
+							self.getSelector body, (err, $)->
+								action.handler stud, {classes: $}, done
+				moodle: (done)->
+					moodleRequest "https://moodle.svuonline.org/login/token.php?username=#{stud_id}&password=#{password}&service=moodle_mobile_app", (err, resp, json)->
+						done(err, json)
+
+			}, (err, results)->
 				return done(err) if err
-				self.applyActionToBody action, body, {}, (err, data)->
-					#console.log stud, cookie, httpResponse.headers, data
-					stud.getOrCreateDbObject (err, doc)->
-						doc.mainCookie = cookie
-						doc.stud_id = stud_id
-						doc.password = password
-						crypto.randomBytes 18, (err, token)->
-							doc.sessionToken = token.toString('base64')
-							doc.save (err, doc)->
-								return done null, {
-									classes: data
-									doc: doc
-								}
+				#console.log(doc)
+				doc.sessionToken = results.token.toString('base64')
+
+				doc.stud_id = stud_id
+				doc.password = password
+				doc.moodleToken = results.moodle.token
+				doc.save (err)->
+					done(err, {classes: results.classes, doc: doc})
+				
 
 
 
@@ -157,7 +182,7 @@ class Student
 
 	## Instantiation
 	constructor: (@opts={}) ->
-		console.log @opts
+		#console.log @opts
 		self = this
 		self.stud_id = @opts.stud_id
 
@@ -233,7 +258,7 @@ class Student
 
 
 
-	applyActionToBody: (action, body, options, cb)->
+	getSelector: (body, cb)->
 		body = encoding.convert(body, 'utf8', 'WINDOWS-1256').toString()
 		start = body.indexOf('<img src="images/webdev_arena.gif" />')
 		end = body.indexOf('<iframe width=199 height=178 name="gToday:normal:agenda.js" id="gToday:normal:agenda.js"')
@@ -246,22 +271,37 @@ class Student
 		debug "Cheerio complete ##{self.studentId}"
 
 		#console.log rootElement.length, rootElement.find('tr').length
-		action.handler self, $, options, cb
+		cb(null, $)
 
-	getRequestParamsFromAction: (action, options={})->
-		requestParameters = if action.params then action.params(self, options) else {}
-		requestParameters.url = action.url(self, options) if action.url
 
-		requestParameters
+	performAnyRequest: (requestParameters, done)->
+		name = requestParameters.$name
+		delete requestParameters.$name
+		if requestParameters.url
+			self.performRequest requestParameters, (err, res)->
+				return done(err) if err
+				self.getSelector res.body, (err, $)->
+					return done(err, {
+						$: $
+						name: name
+					})
+		else
+			done(500)
+
 
 	get: (actionId, options, cb)->
 		debug "Getting #{actionId} for ##{self.studentId}"
 		action = Actions[actionId]
-		requestParameters = self.getRequestParamsFromAction(action, options)
+		requestParameters = action.params(self, options)
+		if not Array.isArray(requestParameters)
+			requestParameters.$name = actionId
+			requestParameters = [requestParameters]
 
-		self.performRequest requestParameters, (err, results)->
-			return cb(err) if err
-			self.applyActionToBody(action, results.body, options, cb)
+		async.map requestParameters, self.performAnyRequest, (err, results)->
+			resObj = {}
+			resObj[i.name] = i.$ || i.json for i in results
+			
+			action.handler(self, resObj, cb)
 
 
 
