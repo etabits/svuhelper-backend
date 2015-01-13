@@ -12,7 +12,7 @@ htmlUtils = require('./htmlUtils')
 
 _ = require('lodash')
 
-toTitleCase = (str)-> str.replace(/_/g, ' ').replace /(?:^|_)[a-z]/g, (m) -> m.replace(/^_/, ' ').toUpperCase()
+toTitleCase = (str)-> if str then str.replace(/_/g, ' ').replace /(?:^|_)[a-z]/g, (m) -> m.replace(/^_/, ' ').toUpperCase() else ''
 Actions = {}
 Actions['classes'] = {
 	url: ()-> "#{baseUrl}/std_classes.php"
@@ -27,17 +27,17 @@ Actions['classes'] = {
 				console.log c
 				details={}
 			{
-				class: parseInt(details[3])
+				class: parseInt(details[3]) || 0
 				tutor: {
 					name: c.Tutor
 					email: c['Tutor mail']
 				}
 				term: {
-					code: details[4]
+					code: details[4] || 'F99'
 				}
 				course: {
-					program: details[1]
-					code: details[2]
+					program: details[1] || ''
+					code: details[2] || ''
 					name: c.Course
 				}
 			}

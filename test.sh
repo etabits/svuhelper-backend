@@ -13,11 +13,19 @@ request() {
 	$curl -G "$baseURI/$1" --data-urlencode "token=$token" | jq '.'
 }
 
-stderr Doing $action
-if [ "login" == "$action" ]; then
+login() {
+	stderr "logging in as $1:***"
 	$curl -H "Content-Type: application/json" \
-	-d "{\"stud_id\":\"hasan_29643\",\"password\":\"$password\"}" \
+	-d "{\"stud_id\":\"$1\",\"password\":\"$2\"}" \
 	$baseURI/login | jq '.'
+
+}
+
+stderr Doing $action
+if [ "loginAs" == "$action" ]; then
+	login "$2" "$3"
+elif [ "results" == "$action" ]; then
+	login "hasan_29643" $password
 elif [ "results" == "$action" ]; then
 	request "student/results"
 elif [ "exams" == "$action" ]; then
