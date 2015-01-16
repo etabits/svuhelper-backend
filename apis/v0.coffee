@@ -25,6 +25,47 @@ dataFixers = {
 		}
 }
 
+studentsRouter.get '/explore/classes', (req, res)->
+	opts = {
+		pid: parseInt(req.query.pid)
+		tid: parseInt(req.query.tid)
+		cid: parseInt(req.query.cid)
+	}
+
+	req.studentObject.get 'explore_classes', opts, (err, data)->
+		return next(err) if err
+		console.log data.courses
+		debug("Got #{data.length} data array for #{req.studentObject.studentId}/explore_classes")
+
+		res.json({success: true, data: data})
+
+studentsRouter.get '/explore/courses', (req, res)->
+	req.studentObject.get 'progtermcourse', {pid: parseInt(req.query.pid)}, (err, data)->
+		return next(err) if err
+		console.log data.courses
+		debug("Got #{data.courses.length} data array for #{req.studentObject.studentId}/courses")
+
+		res.json({success: true, data: data.courses})
+
+studentsRouter.get '/explore/progterm', (req, res)->
+	req.studentObject.get 'progtermcourse', {}, (err, data)->
+		return next(err) if err
+		console.log data.courses
+		debug("Got #{data.length} data array for #{req.studentObject.studentId}/#{req.params.section}")
+		#data = data.map(dataFixers[req.params.section])
+		finalData = []
+		for t in data.terms
+			#console.log t
+			continue if not t.code.match(/1(?:4|5)$/)
+			for p in data.programmes
+				continue if -1==[8, 7].indexOf(p.id)
+				finalData.push {
+					program: p
+					term: t
+				}
+		res.json({success: true, data: finalData})
+
+
 studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
 	#console.log req.params
 	req.studentObject.get req.params.section, {}, (err, data)->

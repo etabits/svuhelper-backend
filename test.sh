@@ -39,7 +39,7 @@ elif [ "exams" == "$action" ]; then
 elif [ "classes" == "$action" ]; then
 	request "student/classes"
 else
-	stderr No such action
-	exit 1
+	echo Trying to call $action...
+	request "student/$action"
 fi
 exit 0;

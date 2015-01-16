@@ -11,6 +11,7 @@ schema = mongoose.Schema {
 
 	lastLogin: Date
 	lastActivity: Date
+	created:	{type: Date, default: Date.now}
 }
 
 schema.pre 'save', (next)->
