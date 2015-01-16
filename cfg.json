@@ -1,0 +1,7 @@
+{
+	"oldMessage": "Welcome to SVU Student's Helper<br />Use the form below to login.<br />",
+	"minVersionCode": 274,
+	"messageBase": "",
+	"messageUpdate": "<font color=\"red\">New Version Available!</font><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper-274.apk?via=app_note\">Click here</a> to download.<br >",
+	"messageOther": "<b>NEW: Browse courses/classes:</b><br />Click through the \"Browse Classes\" button, choose a course, and get a list of <u>assigned tutors AND schedule!</u>"
+}

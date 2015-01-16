@@ -2,7 +2,7 @@ _ = require('lodash')
 debug = require('debug')('svu:debug')
 error = require('debug')('svu:error')
 error.log = console.error.bind(console)
-
+fs = require('fs')
 
 studentsRouter = etabits.express.Router()
 studentsRouter.use (req, res, next)->
@@ -34,7 +34,7 @@ studentsRouter.get '/explore/classes', (req, res)->
 
 	req.studentObject.get 'explore_classes', opts, (err, data)->
 		return next(err) if err
-		
+
 		debug("Got #{data.length} data array for #{req.studentObject.studentId}/explore_classes")
 
 		res.json({success: true, data: data})
@@ -86,12 +86,20 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
 			classes: data.classes
 		}
 
+cfg = {}
+fs.readFile "cfg.json", 'utf-8', (err, data)->
+	try 
+		cfg = JSON.parse(data)
+		console.log cfg
+	catch e
+		console.log e
 v0.get '/hello', (req, res)->
-	message = 'Welcome to SVU Student\'s Helper<br />Use the form below to login.'
-	minVersionCode = 149
-	if parseInt(req.query.versionCode) < minVersionCode
-		message = '<font color="red">New Version Available!</font> <a href="http://www.etabits.com/beta/com.etabits.svu.helper.apk?vc='+minVersionCode+'">Click here</a> to download.<br >
-		App functions will probably <u>NOT</u> work without updating.'
+	message = cfg.messageBase
+	
+	if parseInt(req.query.versionCode) < cfg.minVersionCode
+		message += cfg.messageUpdate
+	else
+		message += cfg.messageOther
 	###
 	message += '<br />
 	<font color="red">Important Note:<br />When the SVU website is DOWN (NOT AVAILABLE, has errors, etc.), the application will stop working too (of course).</font>'
