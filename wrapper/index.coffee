@@ -217,7 +217,7 @@ Actions['exams'] = {
 		table = results.exams('#tt4').eq(0)
 		data = htmlUtils.tableToData(table)
 		#debug "Got #{data.length} table rows from #{student.studentId} exams result"
-		console.log data
+		#console.log data
 		data = _.chain(data).reject( (e)-> !e.Start ).value()
 		#.sortBy(['Date', 'Start']).value()
 
