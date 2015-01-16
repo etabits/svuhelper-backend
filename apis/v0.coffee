@@ -51,8 +51,10 @@ v0.get '/hello', (req, res)->
 	if parseInt(req.query.versionCode) < minVersionCode
 		message = '<font color="red">New Version Available!</font> <a href="http://www.etabits.com/beta/com.etabits.svu.helper.apk?vc='+minVersionCode+'">Click here</a> to download.<br >
 		App functions will probably <u>NOT</u> work without updating.'
+	###
 	message += '<br />
-	<font color="red">Important Node:<br />When the SVU website is DOWN (NOT AVAILABLE, has errors, etc.), the application will stop working too (of course).</font>'
+	<font color="red">Important Note:<br />When the SVU website is DOWN (NOT AVAILABLE, has errors, etc.), the application will stop working too (of course).</font>'
+	###
 	res.send {
 		success: true
 		newsHTML: message

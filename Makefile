@@ -4,4 +4,4 @@ test:
 	./test.sh results
 	./test.sh classes
 preview:
-	supervisor -e 'coffee' -i 'node_modules' -x coffee -n error -- server.coffee
+	DEBUG=* supervisor -e 'coffee' -i 'node_modules' -x coffee -n error -- server.coffee
