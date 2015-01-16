@@ -1,7 +1,12 @@
 #!/bin/bash
+id=$2
 
+if [ "$id" == "" ]; then
+	id=29643
+fi
+#echo $id; exit 0
 password=$(mongo 'svu-helper' --quiet --eval 'db.users.findOne({_id:29643}).password')
-token=$(mongo 'svu-helper' --quiet --eval "db.users.findOne({_id:$2}).sessionToken")
+token=$(mongo 'svu-helper' --quiet --eval "db.users.findOne({_id:$id}).sessionToken")
 baseURI='http://127.0.0.1:5757/v0'
 curl='curl --silent'
 action=$1
