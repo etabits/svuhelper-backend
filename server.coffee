@@ -25,5 +25,9 @@ app.use (err, req, res, next)->
 	res.status(400)
 	res.send {success: false, errorMessage: 'Bad Request'}
 
+process.on 'uncaughtException', (err) ->
+  console.error('Caught exception: ' + err)
+
+#setTimeout ( ()-> d() ), 55
 app.listen 5757, ()->
 	console.log 'Started!'
