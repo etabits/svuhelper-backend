@@ -389,6 +389,8 @@ class Student
 			}
 			terms: global.etabits.data.terms
 			programs: global.etabits.data.programs
+			htmlHomeTop: ""
+			htmlHomeBottom: ""
 		}
 		done(null, retObj)
 
