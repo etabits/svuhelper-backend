@@ -11,6 +11,7 @@ schema = mongoose.Schema {
 
 	lastLogin: Date
 	lastActivity: Date
+	actionsCounter: {type: Number, default: 0}
 	created:	{type: Date, default: Date.now}
 }
 
