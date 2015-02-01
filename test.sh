@@ -7,7 +7,7 @@ fi
 #echo $id; exit 0
 password=$(mongo 'svu-helper' --quiet --eval 'db.users.findOne({_id:29643}).password')
 token=$(mongo 'svu-helper' --quiet --eval "db.users.findOne({_id:$id}).sessionToken")
-baseURI='http://127.0.0.1:5757/v0'
+baseURI='http://127.0.0.1:5757/v0p1'
 curl='curl --silent'
 action=$1
 

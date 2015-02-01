@@ -379,6 +379,18 @@ class Student
 			#console.log results.resp.headers
 
 
+	getLoginRetObject: (done)->
+		retObj = {
+			success: true
+			token: self.doc.sessionToken
+			student: {
+				id: self.studentId
+				username: self.stud_id
+			}
+			terms: global.etabits.data.terms
+			programs: global.etabits.data.programs
+		}
+		done(null, retObj)
 
 	getSelector: (body, cb)->
 		body = encoding.convert(body, 'utf8', 'WINDOWS-1256').toString()

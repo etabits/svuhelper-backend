@@ -16,7 +16,24 @@ global.etabits = {
 	jsonMiddleware: require('body-parser').json()
 	express: express
 	app: app
+	data: {
+		terms: [
+			{"id": 26, "code": "S14" }
+			{"id": 27, "code": "F14" }
+		]
+		programs: [
+			{"id": 2, "code": "ISE" }
+			{"id": 7, "code": "ENG" }
+			{"id": 8, "code": "BIT" }
+		]
+	}
 }
+for collectionName in ['terms', 'programs']
+	collectionData = global.etabits.data[collectionName]
+	global.etabits.data[collectionName+'ByCode'] = {}
+	global.etabits.data[collectionName+'ByCode'][row.code] = row for row in collectionData
+
+#console.log global.etabits.data
 app.use '/v0',   require('./apis/v0')
 app.use '/v0p1', require('./apis/v0p1')
 mappedErrors = {

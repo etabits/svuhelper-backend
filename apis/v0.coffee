@@ -90,7 +90,7 @@ cfg = {}
 fs.readFile "cfg.json", 'utf-8', (err, data)->
 	try 
 		cfg = JSON.parse(data)
-		console.log cfg
+		#console.log cfg
 	catch e
 		console.log e
 v0.get '/hello', (req, res)->
