@@ -38,6 +38,7 @@ app.use '/v0',   require('./apis/v0')
 app.use '/v0p1', require('./apis/v0p1')
 mappedErrors = {
 	'BADLOGIN': [401, 'BADLOGIN', 'Bad username/password!']
+	'INVALID_TOKEN': [401, 'INVALID_TOKEN', 'Invalid session!\nPlease login again.']
 }
 mappedErrors.ECONNRESET = mappedErrors.ENOTFOUND = [502, 'CONNERR', 'Connection Error!\nSVU servers are probably having some problem, Please try again in a few minutes...']
 app.use (err, req, res, next)->

@@ -251,7 +251,7 @@ class Student
 	@restoreFromToken: (token, done)->
 		User.findOne {sessionToken: token}, (err, doc)->
 			return done(err) if err
-			return done({error: 'INVALID'}) unless doc
+			return done({code: 'INVALID_TOKEN'}) unless doc
 			stud = new Student({
 					stud_id: doc.stud_id
 					password: doc.password
