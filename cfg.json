@@ -1,7 +1,7 @@
 {
-	"oldMessage": "Welcome to SVU Student's Helper<br />Use the form below to login.<br />",
-	"minVersionCode": 274,
-	"messageBase": "",
-	"messageUpdate": "<font color=\"red\">New Version Available!</font><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper-274.apk?via=app_note\">Click here</a> to download.<br >",
-	"messageOther": "<b>NEW: Browse courses/classes:</b><br />Click through the \"Browse Classes\" button, choose a course, and get a list of <u>assigned tutors AND schedule!</u>"
+    "oldMessage": "Welcome to SVU Student's Helper<br />Use the form below to login.<br />",
+    "minVersionCode": 274,
+    "messageBase": "",
+    "messageUpdate": "<font color=\"red\">ATTENTION!</font><br />You are using an old version.<br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_attention_20150125\">Download Last Version</a>",
+    "messageOther": "<b>Note:</b><br />This app is being actively developed, and tested for BIT students. If you are not a BIT student (ISE, HND, etc.) and having problems, please let us know."
 }

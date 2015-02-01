@@ -2,12 +2,12 @@ mongoose	= require('mongoose')
 
 schema = mongoose.Schema {
 	_id:	Number
-	year: Number
-	season: {type: String, enum: ['F', 'S']}
+	code: String
+	name: String
 }
 
 
-Model = mongoose.model('Term', schema)
+Model = mongoose.model('Program', schema)
 
 
 module.exports = Model

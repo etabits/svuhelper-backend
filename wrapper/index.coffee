@@ -16,6 +16,14 @@ error.log = console.error.bind(console)
 
 _ = require('lodash')
 
+
+site = 'mainCookie'
+User = require '../models/User'
+
+baseUrl = 'https://www.svuonline.org/isis'
+#baseUrl = 'https://www.svuonline.org1/isis'
+
+
 toTitleCase = (str)-> if str then str.replace(/_/g, ' ').replace /(?:^|_)[a-z]/g, (m) -> m.replace(/^_/, ' ').toUpperCase() else ''
 Actions = {}
 ###
@@ -81,6 +89,7 @@ Actions['explore_classes'] = {
 			classNumber = parseInt(details[3])
 			classes[classNumber]= {
 				class: classNumber
+				number: classNumber
 				percentage: parseInt(ti[2])
 				tutor: {
 					name: ti[1]
@@ -144,6 +153,7 @@ Actions['classes'] = {
 			{
 				#orig: c
 				class: parseInt(details[3]) || 0
+				number: parseInt(details[3]) || 0
 				tutor: {
 					name: c.Tutor
 					email: c['Tutor mail']
@@ -235,10 +245,6 @@ Actions['exams'] = {
 		data = _.chain(data).sortBy('date').value()
 		cb(null, data)
 }
-site = 'mainCookie'
-User = require '../models/User'
-
-baseUrl = 'https://www.svuonline.org/isis'
 
 class Student
 	self = null
@@ -287,7 +293,7 @@ class Student
 				doc.password = password
 				doc.moodleToken = results.moodle.token
 				doc.save (err)->
-					done(err, {classes: results.classes, doc: doc})
+					done(err, {classes: results.classes, doc: doc, stud: stud})
 				
 
 
@@ -346,7 +352,7 @@ class Student
 				return done(err)
 			else if not self.isResponseAuthd(httpResponse, body)
 				#console.log body.toString()
-				return done({error: 'UNAUTH'})
+				return done({code: 'BADLOGIN'})
 			else
 				return done(null, httpResponse, body)
 
@@ -360,7 +366,7 @@ class Student
 							updatedDoc = {}
 							self.doc[site]=cookie
 							self.doc.save (err, doc)->
-								done(err || true)
+								done(err || {code: 'BADLOGIN'})
 					else
 						debug "Request succeeded for ##{self.studentId}"
 						done(null, {resp: httpResponse, body: body})
@@ -416,6 +422,9 @@ class Student
 			requestParameters = [requestParameters]
 
 		async.map requestParameters, self.performAnyRequest, (err, results)->
+			if err
+				console.log '>>>',err
+				return cb(err)
 			resObj = {}
 			resObj[i.name] = i.$ || i.json for i in results
 			

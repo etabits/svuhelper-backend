@@ -38,6 +38,8 @@ elif [ "exams" == "$action" ]; then
 	request "student/exams"
 elif [ "classes" == "$action" ]; then
 	request "student/classes"
+elif [ "getLogin" == "$action" ]; then
+	request "login"
 else
 	echo Trying to call $action...
 	request "student/$action"

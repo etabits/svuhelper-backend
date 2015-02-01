@@ -17,16 +17,31 @@ global.etabits = {
 	express: express
 	app: app
 }
-app.use '/v0', require('./apis/v0')
-
+app.use '/v0',   require('./apis/v0')
+app.use '/v0p1', require('./apis/v0p1')
+mappedErrors = {
+	'BADLOGIN': [401, 'BADLOGIN', 'Bad username/password!']
+}
+mappedErrors.ECONNRESET = mappedErrors.ENOTFOUND = [502, 'CONNERR', 'Connection Error!\nSVU servers are probably having some problem, Please try again in a few minutes...']
 app.use (err, req, res, next)->
-	console.log err, req.url, req.body
+	console.log err, err.code, req.url, req.body
 	console.log err.stack
-	res.status(400)
-	res.send {success: false, errorMessage: 'Bad Request'}
+	result = {
+		success: false
+		errorCode: 'OTHER'
+		errorMessage: 'Unspecified Error Occurred.\nPlease try again later. If the error persisted, contact us.'
+	}
+	if mappedErrors[err.code]
+		res.status(mappedErrors[err.code][0])
+		result.errorCode = mappedErrors[err.code][1]
+		result.errorMessage = mappedErrors[err.code][2]
+	else
+		res.status(500)
+	res.send result
 
 process.on 'uncaughtException', (err) ->
   console.error('Caught exception: ' + err)
+  console.log(err.stack)
 
 #setTimeout ( ()-> d() ), 55
 app.listen 5757, ()->
