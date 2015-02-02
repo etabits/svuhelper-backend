@@ -14,6 +14,7 @@ studentsRouter.use (req, res, next)->
 		#console.log req.studentObject.doc
 		req.studentObject.doc.lastActivity = new Date()
 		req.on 'end', ()->
+			++req.studentObject.doc.actionsCounter
 			req.studentObject.doc.save()
 		next()
 
