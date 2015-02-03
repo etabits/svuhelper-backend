@@ -12,7 +12,7 @@ htmlUtils = require('./htmlUtils')
 debug = require('debug')('svu:debug')
 error = require('debug')('svu:error')
 error.log = console.error.bind(console)
-
+fs = require('fs')
 
 _ = require('lodash')
 
@@ -315,8 +315,14 @@ class Student
 		debug "Instantiated for student ##{self.studentId}"
 
 	isResponseAuthd: (httpResponse, body)->
-		#-1 != body.toString().indexOf('Login IP')
-		-1 == body.toString().indexOf('<img src="images/icon/group_ge.gif" align="left" />Login')
+		body = body.toString()
+
+		if 0 == body.indexOf('<!DOCTYPE HTML') # Full document
+			# We want the Login IP mentioned here
+			return -1 != body.indexOf('Login IP')
+		else
+			# We do not want this image present!
+			return -1 == body.indexOf('<img src="images/icon/group_ge.gif" align="left" />Login')
 
 
 	getOrCreateDbObject: (done)->
@@ -427,6 +433,7 @@ class Student
 					return done(err, {
 						$: $
 						name: name
+						body: res.body
 					})
 		else
 			done(500)
@@ -440,14 +447,20 @@ class Student
 			requestParameters.$name = actionId
 			requestParameters = [requestParameters]
 
+		#console.log requestParameters
 		async.map requestParameters, self.performAnyRequest, (err, results)->
 			if err
 				console.log '>>>',err
 				return cb(err)
 			resObj = {}
 			resObj[i.name] = i.$ || i.json for i in results
-			
-			action.handler(self, resObj, cb)
+
+			try
+				action.handler(self, resObj, cb)
+			catch e
+				error(e)
+				for r in results
+					fs.writeFile("/tmp/svuhelper-err-#{Date.now()}-#{r.name}", r.body)
 
 
 
