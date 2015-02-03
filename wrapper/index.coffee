@@ -181,6 +181,11 @@ Actions['results'] = {
 		data = htmlUtils.tableToData(table)
 		#data = _.chain(data).select( (e)->'Done'==e.Status && e.Action ).sortBy(['Start Time']).value()
 		data = data.map (r)->
+			if (!r.Assessment)
+				error('Error at results processing routine: r')
+				console.error(r)
+				error('Error at results processing routine: data')
+				console.error(data)
 			details = r.Assessment.match(/^(.{2,4})_(.{2,7})_(?:(?:(?:F|S)\d{2})?(?:(?:C|c)\d+_)?)+((?:F|S)\d{2})_(.+)_\d{4}-\d{2}-\d{2}/)
 			if not details
 				error("Could not match assessment", r.Assessment, r)
