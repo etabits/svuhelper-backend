@@ -1,6 +1,19 @@
+debug = require('debug')
+log = {
+	verbose:debug('svuhelper:verbose')	# blue
+	green:	debug('svuhelper:green')	# green
+	warning:debug('svuhelper:warning')	# yellow
+	info:	debug('svuhelper:info')		# darkblue
+	purple:	debug('svuhelper:purple')	# purple
+	error:	debug('svuhelper:error')	# red
+}
+log.error.log = console.error.bind(console)
+log.warning.log = console.error.bind(console)
+
+l(a) for a,l of log
+
 express = require('express')
 app = express()
-debug = require('debug')('app')
 
 mongoose = require('mongoose')
 mongoConnectionString = process.env.MONGO_URL || 'mongodb://localhost/svu-helper'
@@ -12,7 +25,8 @@ mongoose.connect(mongoConnectionString)
 
 
 global.etabits = {
-	svu: require('./wrapper/')
+	baseUrl: 'https://www.svuonline.org/isis'
+	log: log
 	jsonMiddleware: require('body-parser').json()
 	express: express
 	app: app
@@ -28,6 +42,8 @@ global.etabits = {
 		]
 	}
 }
+global.etabits.svu = require('./wrapper/')
+
 for collectionName in ['terms', 'programs']
 	collectionData = global.etabits.data[collectionName]
 	global.etabits.data[collectionName+'ByCode'] = {}

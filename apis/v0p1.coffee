@@ -1,7 +1,4 @@
 _ = require('lodash')
-debug = require('debug')('svu:debug')
-error = require('debug')('svu:error')
-error.log = console.error.bind(console)
 fs = require('fs')
 
 loadStudentFromToken = (req, res, next)->
@@ -28,12 +25,14 @@ dataFixers = {
 		}
 }
 data = global.etabits.data
+log = global.etabits.log
+
 studentsRouter.get '/explore/:term/:program', (req, res)->
-	console.log data.programsByCode[req.params.program].id
+	#console.log data.programsByCode[req.params.program].id
 	req.studentObject.get 'progtermcourse', {pid: data.programsByCode[req.params.program].id}, (err, data)->
 		return next(err) if err
 
-		debug("Got #{data.courses.length} data array for #{req.studentObject.studentId}"+req.url.split('?')[0])
+		log.info("Got #{data.courses.length} data array for #{req.studentObject.studentId}"+req.url.split('?')[0])
 
 		res.json({success: true, data: data.courses})
 
@@ -44,12 +43,12 @@ studentsRouter.get '/explore/:term/:program/:courseId', (req, res)->
 		tid: data.termsByCode[req.params.term].id
 		cid: parseInt(req.params.courseId)
 	}
-	console.log opts
+	#console.log opts
 
 	req.studentObject.get 'explore_classes', opts, (err, data)->
 		return next(err) if err
 
-		debug("Got #{data.length} data array for #{req.studentObject.studentId}/explore_classes")
+		log.info("Got #{data.length} data array for #{req.studentObject.studentId}"+req.url.split('?')[0])
 
 		res.json({success: true, data: data})
 
@@ -58,7 +57,7 @@ studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
 	#console.log req.params
 	req.studentObject.get req.params.section, {}, (err, data)->
 		return next(err) if err
-		debug("Got #{data.length} data array for #{req.studentObject.studentId}/#{req.params.section}")
+		log.info("Got #{data.length} data array for #{req.studentObject.studentId}/#{req.params.section}")
 		#data = data.map(dataFixers[req.params.section])
 		res.json({success: true, data: data})
 
@@ -71,7 +70,7 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
 			res.send(loginResult)
 
 v0.get '/login', loadStudentFromToken, (req, res, next)->
-	debug("Resuming #{req.studentObject.studentId} session...")
+	log.info("Resuming #{req.studentObject.studentId} session...")
 	req.studentObject.getLoginRetObject (err, loginResult)->
 		res.send(loginResult)
 
@@ -90,10 +89,7 @@ v0.get '/hello', (req, res)->
 		message += cfg.messageUpdate
 	else
 		message += cfg.messageOther
-	###
-	message += '<br />
-	<font color="red">Important Note:<br />When the SVU website is DOWN (NOT AVAILABLE, has errors, etc.), the application will stop working too (of course).</font>'
-	###
+		
 	res.send {
 		success: true
 		newsHTML: message

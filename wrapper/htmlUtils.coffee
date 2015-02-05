@@ -1,9 +1,10 @@
 _ = require('lodash')
-debug = require('debug')('svu:debug')
-error = require('debug')('svu:error')
-error.log = console.error.bind(console)
+log = global.etabits.log
 
 htmlUtils = {}
+
+htmlUtils.toTitleCase = (str)-> if str then str.replace(/_/g, ' ').replace /(?:^|_)[a-z]/g, (m) -> m.replace(/^_/, ' ').toUpperCase() else ''
+
 
 htmlUtils.tableToData = (table, header_row = true, recursive = false)->
 	rows = table.find('> tr')
@@ -31,7 +32,7 @@ htmlUtils.tableToData = (table, header_row = true, recursive = false)->
 			keys = header_row
 
 			
-	debug("Data extraction from table yielded #{data.length} rows")
+	log.verbose("Data extraction from table yielded #{data.length} rows")
 	data
 
 htmlUtils.selectToData = (select, valKey='value', labelKey='label')->

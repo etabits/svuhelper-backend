@@ -1,5 +1,6 @@
 test:
 	./test.sh login
+	./test.sh getLogin
 	./test.sh exams
 	./test.sh results
 	./test.sh classes
