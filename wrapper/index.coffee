@@ -190,9 +190,11 @@ class Student
 			}
 			terms: global.etabits.data.terms
 			programs: global.etabits.data.programs
-			htmlHomeTop: ""
-			htmlHomeBottom: ""
+			htmlHomeTop: ''
+			htmlHomeBottom: ''
 		}
+		if self.doc.actionsCounter > 10
+			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
 		done(null, retObj)
 
 	getSelector: (body, cb)->
