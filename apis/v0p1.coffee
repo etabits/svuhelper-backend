@@ -8,8 +8,10 @@ loadStudentFromToken = (req, res, next)->
 		#console.log(stud)
 		req.studentObject = stud
 		#console.log req.studentObject.doc
-		req.studentObject.doc.lastActivity = new Date()
+		req.studentObject.doc.lastActivity = req.studentObject.session.lastActivity = new Date()
 		req.on 'end', ()->
+			req.studentObject.session.save()
+			
 			++req.studentObject.doc.actionsCounter
 			req.studentObject.doc.save()
 		next()
@@ -63,7 +65,10 @@ studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
 
 v0 = etabits.express.Router()
 v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
-	etabits.svu.Student.login req.body.stud_id, req.body.password, (err, result)->
+	context = {}
+	context.deviceType = 'a'
+	context.description = "Android App v#{req.query.versionCode}"
+	etabits.svu.Student.login req.body.stud_id, req.body.password, context, (err, result)->
 		return next(err) if err
 		
 		result.stud.getLoginRetObject (err, loginResult)->
@@ -89,7 +94,7 @@ v0.get '/hello', (req, res)->
 		message += cfg.messageUpdate
 	else
 		message += cfg.messageOther
-		
+
 	res.send {
 		success: true
 		newsHTML: message

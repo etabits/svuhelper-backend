@@ -77,7 +77,10 @@ studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
 
 v0 = etabits.express.Router()
 v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
-	etabits.svu.Student.login req.body.stud_id, req.body.password, (err, data)->
+	context = {}
+	context.deviceType = 'a'
+	context.description = "Android App Old (<=v274)"
+	etabits.svu.Student.login req.body.stud_id, req.body.password, context, (err, data)->
 		console.error(err) if err
 		
 		return res.send({success: false, errorMessage: 'Bad Login'}) if err

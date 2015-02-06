@@ -1,8 +1,8 @@
 mongoose	= require('mongoose')
+Session = require('./Session')
 
 schema = mongoose.Schema {
 	_id:	Number
-	sessionToken: String
 	stud_id: ''
 	password: ''
 
@@ -11,8 +11,13 @@ schema = mongoose.Schema {
 
 	lastLogin: Date
 	lastActivity: Date
+	#activeSession: {type: mongoose.Schema.Types.ObjectId, ref: 'Session'}
 	actionsCounter: {type: Number, default: 0}
 	created:	{type: Date, default: Date.now}
+
+
+	# Deprecated
+	sessionToken: String
 }
 
 schema.pre 'save', (next)->

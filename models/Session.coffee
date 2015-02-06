@@ -8,7 +8,7 @@ schema = mongoose.Schema {
 	description: String
 
 
-	lastAccess: {type: Date, default: Date.now}
+	lastActivity: {type: Date, default: Date.now}
 	created: {type: Date, default: Date.now}
 }
 

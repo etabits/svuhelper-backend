@@ -30,19 +30,23 @@ log = global.etabits.log
 class Student
 	self = null
 	@restoreFromToken: (token, done)->
-		User.findOne {sessionToken: token}, (err, doc)->
+		Session.findOne {token: token}, (err, session)->
 			return done(err) if err
-			return done({code: 'INVALID_TOKEN'}) unless doc
-			stud = new Student({
-					stud_id: doc.stud_id
-					password: doc.password
-				})
-			stud.doc = doc
-			done(null, stud)
+			return done({code: 'INVALID_TOKEN'}) unless session
+			User.findOne {_id: session.student}, (err, doc)->
+				return done(err) if err
+				return done({code: 'INVALID_TOKEN'}) unless doc
+				stud = new Student({
+						stud_id: doc.stud_id
+						password: doc.password
+					})
+				stud.session = session
+				stud.doc = doc
+				done(null, stud)
 
 
 
-	@login: (stud_id, password, done)->
+	@login: (stud_id, password, context, done)->
 		stud = new Student({stud_id: stud_id, password: password})
 		stud.getOrCreateDbObject (err, doc)->
 			return done(err) if err
@@ -68,13 +72,22 @@ class Student
 				return done(err) if err
 
 				#console.log(doc)
-				doc.sessionToken = results.token.toString('base64')
+				session = new Session({
+						token: results.token.toString('base64')
+						student: stud.studentId
+						deviceType: context.deviceType || 'a'
+						description: context.description || ''
+					})
+				session.save ()->
 
-				doc.stud_id = stud_id
-				doc.password = password
-				doc.moodleToken = results.moodle.token
-				doc.save (err)->
-					done(err, {classes: results.classes, doc: doc, stud: stud})
+					#doc.activeSession = session
+
+					doc.stud_id = stud_id
+					doc.password = password
+					doc.moodleToken = results.moodle.token
+					doc.save (err)->
+						stud.session = session
+						done(err, {classes: results.classes, doc: doc, stud: stud})
 				
 
 
@@ -167,9 +180,10 @@ class Student
 
 
 	getLoginRetObject: (done)->
+		#self.doc.populate 'activeSession', ()->
 		retObj = {
 			success: true
-			token: self.doc.sessionToken
+			token: self.session.token
 			student: {
 				id: self.studentId
 				username: self.stud_id
