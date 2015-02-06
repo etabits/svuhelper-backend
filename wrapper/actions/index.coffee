@@ -185,7 +185,7 @@ Actions['results'] = {
 		#console.log(data)
 		now = new Date()
 		data = _.chain(data)
-			.select( (e)->('Done'==e.status || 'S14'==e.term.code || ((now-e.date)< FourMonths))  && e.grade!=null )
+			.select( (e)-> ('Done'==e.status || 'S14'==e.term.code || ((now-e.date)< FourMonths))  && ('number' == typeof e.grade) && !isNaN(e.grade))
 			.sortBy('date').value().reverse()
 		cb(null, data)
 }
