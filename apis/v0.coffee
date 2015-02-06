@@ -93,8 +93,8 @@ updateBuggers = {
     "class": 0,
     "number": 0,
     "tutor": {
-      "name": "Dr Sawsan Hisham Al-Jazairi",
-      "email": "t_saljazairi"
+      "name": "",
+      "email": ""
     },
     "term": {
       "code": "S99"
@@ -102,7 +102,7 @@ updateBuggers = {
     "course": {
       "program": "SVU",
       "code": "UPD999",
-      "name": "UPGRADE NOW! bit.ly/SVUHelper\n(Or use the link in the login screen)\n\n\n"
+      "name": "UPGRADE NOW! bit.ly/SVUHelper\n(Or use the link in the login screen)\n"
     }
   }
 }
