@@ -66,14 +66,21 @@ studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
 v0 = etabits.express.Router()
 v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
 	context = {}
-	context.deviceType = 'a'
-	context.description = "Android App v#{req.query.versionCode}"
+	context.deviceType = if 'web'==req.body.app then 'w' else 'a'
+	context.description = if 'w' == context.deviceType then 'Web' else "Android App v#{req.query.versionCode}"
 	etabits.svu.Student.login req.body.stud_id, req.body.password, context, (err, result)->
 		return next(err) if err
 		
 		result.stud.getLoginRetObject (err, loginResult)->
 			res.send(loginResult)
 
+v0.get '/web', loadStudentFromToken, (req, res)->
+	res.send {
+		success: true
+		student: {
+			stud_id: req.studentObject.doc.stud_id
+		}
+	}
 v0.get '/login', loadStudentFromToken, (req, res, next)->
 	log.info("Resuming #{req.studentObject.studentId} session...")
 	req.studentObject.getLoginRetObject (err, loginResult)->
