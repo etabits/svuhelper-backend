@@ -89,6 +89,22 @@ updateBuggers = {
       "code": "S14"
     }
   }
+  classes: {
+    "class": 0,
+    "number": 0,
+    "tutor": {
+      "name": "Dr Sawsan Hisham Al-Jazairi",
+      "email": "t_saljazairi"
+    },
+    "term": {
+      "code": "S99"
+    },
+    "course": {
+      "program": "SVU",
+      "code": "UPD999",
+      "name": "UPGRADE NOW! bit.ly/SVUHelper\n(Or use the link in the login screen)\n\n\n"
+    }
+  }
 }
 studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
   #console.log req.params
@@ -112,6 +128,8 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
     
     return res.send({success: false, errorMessage: 'Bad Login'}) if err
 
+    data.classes.unshift updateBuggers['classes']
+    data.classes.push updateBuggers['classes']
     res.send {
       success: true
       token: data.doc.sessionToken
