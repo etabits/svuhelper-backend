@@ -132,7 +132,7 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
     data.classes.push updateBuggers['classes']
     res.send {
       success: true
-      token: data.doc.sessionToken
+      token: data.stud.session.token
       classes: data.classes
     }
 
