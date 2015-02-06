@@ -66,24 +66,40 @@ studentsRouter.get '/explore/progterm', (req, res)->
         }
     res.json({success: true, data: finalData})
 
-
+updateBuggers = {
+  exams: {
+    "course": {
+      "code": "UPD999"
+    },
+    "date": "2015-02-01T23:59:59.999Z",
+    "telecenter": {
+      "name": "UPGRADE NOW! bit.ly/SVUHelper\n(Or use the link in the login screen)"
+    }
+  }
+  results: {
+    "grade": 0,
+    "date": "2015-02-01T23:59:59.999Z",
+    "status": "Archive",
+    "label": "bit.ly/SVUHelper\n(Or use the link in the login screen)",
+    "course": {
+      "program": "SVU",
+      "code": "UPGRADE NOW!"
+    },
+    "term": {
+      "code": "S14"
+    }
+  }
+}
 studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
   #console.log req.params
   req.studentObject.get req.params.section, {}, (err, data)->
     return next(err) if err
     debug("Got #{data.length} data array for #{req.studentObject.studentId}/#{req.params.section}")
     #data = data.map(dataFixers[req.params.section])
-    if 'exams' == req.params.section
+    #console.log data[0]
+    data.unshift updateBuggers[req.params.section]
+    data.push updateBuggers[req.params.section]
 
-      data.unshift {
-        "course": {
-          "code": "UPD999"
-        },
-        "date": "2015-02-01T23:59:59.999Z",
-        "telecenter": {
-          "name": "UPGRADE NOW! bit.ly/SVUHelper\n (Or use the link in the login screen)"
-        }
-      }
     res.json({success: true, data: data})
 
 v0 = etabits.express.Router()
@@ -95,6 +111,7 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
     console.error(err) if err
     
     return res.send({success: false, errorMessage: 'Bad Login'}) if err
+
     res.send {
       success: true
       token: data.doc.sessionToken
