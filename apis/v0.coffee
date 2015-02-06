@@ -77,11 +77,11 @@ studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
 
       data.unshift {
         "course": {
-          "code": "UPD513"
+          "code": "UPD999"
         },
         "date": "2015-02-01T23:59:59.999Z",
         "telecenter": {
-          "name": "You are using an old version. UPGRADE NOW!\n Use the link in the login screen, or this link: bit.ly/SVUHelper"
+          "name": "UPGRADE NOW! bit.ly/SVUHelper\n (Or use the link in the login screen)"
         }
       }
     res.json({success: true, data: data})
