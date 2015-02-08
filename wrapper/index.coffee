@@ -106,6 +106,9 @@ class Student
 	isResponseAuthd: (httpResponse, body)->
 		body = body.toString()
 
+		self.doc.passwordExpired = -1 != body.indexOf('change_pass.php?type=expiredPass')
+		log.purple("Password for ##{self.studentId} has expired!") if self.doc.passwordExpired
+
 		if 0 == body.indexOf('<!DOCTYPE HTML') # Full document
 			# We want the Login IP mentioned here
 			return -1 != body.indexOf('Login IP')
@@ -144,6 +147,8 @@ class Student
 			#self.checkCookie(site, cookie, done)
 
 	performRequestWithCookie: (params, cookie, done)->
+		#self ?= this
+		#console.log(this, self)
 		params.headers = {Cookie: cookie}
 		log.info("Performing request on behalf of ##{self.studentId}", params.url)
 		#console.log params
@@ -153,8 +158,16 @@ class Student
 			else if not self.isResponseAuthd(httpResponse, body)
 				#console.log body.toString()
 				return done({code: 'BADLOGIN'})
-			else
+			else # Everything is fine, do the callback
+				###
+				async.parallel [
+					(done)-> # If password is expired, save the doc first...
+						return done(null) if not self.doc.passwordExpired
+						self.doc.save ()-> done(null)
+				], ()-> # now we return!
+				###
 				return done(null, httpResponse, body)
+
 
 
 	performRequest: (params, done)->
@@ -196,6 +209,8 @@ class Student
 		retObj.htmlHomeTop = 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 		if self.doc.actionsCounter > 10
 			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
+		if self.doc.passwordExpired
+			retObj.htmlHomeTop = '<font color=\"#990000\">PASSWORD EXPIRED!</font><br /><p>Please <a href="https://svuonline.org/isis/">login to your account at svuonline.org</a> and change it NOW!</p>'
 		done(null, retObj)
 
 	getSelector: (body, cb)->

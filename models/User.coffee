@@ -15,6 +15,7 @@ schema = mongoose.Schema {
 	actionsCounter: {type: Number, default: 0}
 	created:	{type: Date, default: Date.now}
 
+	passwordExpired: {type: Boolean, default: false}
 
 	# Deprecated
 	sessionToken: String

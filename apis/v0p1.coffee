@@ -79,8 +79,10 @@ v0.get '/web', loadStudentFromToken, (req, res)->
 		success: true
 		student: {
 			stud_id: req.studentObject.doc.stud_id
+			passwordExpired: req.studentObject.doc.passwordExpired
 		}
 	}
+
 v0.get '/login', loadStudentFromToken, (req, res, next)->
 	log.info("Resuming #{req.studentObject.studentId} session...")
 	req.studentObject.getLoginRetObject (err, loginResult)->
