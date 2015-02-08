@@ -39,6 +39,7 @@ global.etabits = {
 			{"id": 2, "code": "ISE" }
 			{"id": 7, "code": "ENG" }
 			{"id": 8, "code": "BIT" }
+			{"id": 21, "code": "BL" }
 		]
 	}
 }
@@ -52,6 +53,7 @@ for collectionName in ['terms', 'programs']
 #console.log global.etabits.data
 app.use '/v0',   require('./apis/v0')
 app.use '/v0p1', require('./apis/v0p1')
+app.use '/dummy', require('./apis/dummy')
 mappedErrors = {
 	'BADLOGIN': [401, 'BADLOGIN', 'Bad username/password!']
 	'INVALID_TOKEN': [401, 'INVALID_TOKEN', 'Invalid session!\nPlease login again.']
