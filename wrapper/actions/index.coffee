@@ -55,6 +55,8 @@ Actions['explore_classes'] = {
 			for k in [0..tds.length-1] # hours in day
 				isHavingClassNow = -1==['#C6DCFC', '#A1C6FC'].indexOf(tds.eq(k).attr('bgcolor'))
 				if isHavingClassNow
+					if not classesByTimeTable[i]
+						log.warning("classesByTimeTable[#{i}] not set", classesByTimeTable)
 					classesByTimeTable[i].hour = (new Date((startDate+30*k)*60000)).toGMTString().substr(17, 5);
 					break
 
@@ -67,7 +69,6 @@ Actions['explore_classes'] = {
 			if not details
 				log.warning("Could not match tutorInfo details", ti[0], ti)
 				#console.log c
-				details={}
 			classNumber = parseInt(details[3])
 			classes[classNumber]= {
 				class: classNumber
