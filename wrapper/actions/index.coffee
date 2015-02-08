@@ -64,6 +64,10 @@ Actions['explore_classes'] = {
 		classes = []
 		for ti in tutorsInfo
 			details = ti[0].match(/^(.{2,4})_(.{2,7})_C(\d+)_((?:F|S)\d{2})$/)
+			if not details
+				log.warning("Could not match tutorInfo details", ti[0], ti)
+				#console.log c
+				details={}
 			classNumber = parseInt(details[3])
 			classes[classNumber]= {
 				class: classNumber
