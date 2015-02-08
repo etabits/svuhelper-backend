@@ -40,6 +40,7 @@ global.etabits = {
 			{"id": 7, "code": "ENG" }
 			{"id": 8, "code": "BIT" }
 			{"id": 21, "code": "BL" }
+			{"id": 27, "code": "BMC" }
 		]
 	}
 }
