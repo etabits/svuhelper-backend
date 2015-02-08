@@ -193,6 +193,7 @@ class Student
 			htmlHomeTop: ''
 			htmlHomeBottom: ''
 		}
+		retObj.htmlHomeTop = 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 		if self.doc.actionsCounter > 10
 			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
 		done(null, retObj)
