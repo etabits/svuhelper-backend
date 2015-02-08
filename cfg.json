@@ -2,6 +2,6 @@
     "oldMessage": "Welcome to SVU Student's Helper<br />Use the form below to login.<br />",
     "minVersionCode": 513,
     "messageBase": "",
-    "messageUpdate": "<font color=\"#990000\">ATTENTION!<br />This version will stop functioning soon. Please Upgrade!</font><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150205\">Click Here to Download Last Version</a>.<br />The new version shortcut is labeled <font color=\"blue\">SVU Helper</font>, while the old (this) one is labeled <font color=\"blue\">Login</font>.<br /><i>For technical reasons, the new version does not replace this one. Instead, you will have to un-install this one.</i>",
+    "messageUpdate": "<font color=\"#990000\">ATTENTION!</font><br /><font color=\"#990000\">This version will stop functioning soon. Please Upgrade!</font><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150205\">Click Here to Download Last Version</a>.<br />The new version shortcut is labeled <font color=\"blue\">SVU Helper</font>, while the old (this) one is labeled <font color=\"blue\">Login</font>.<br /><i>For technical reasons, the new version does not replace this one. Instead, you will have to un-install this one.</i>",
     "messageOther": "<b>Note:</b><br />This app is being actively developed, and tested for BIT students. If you are not a BIT student (ISE, HND, etc.) and having problems, please let us know."
 }
