@@ -1,56 +1,14 @@
-debug = require('debug')
-log = {
-	verbose:debug('svuhelper:verbose')	# blue
-	green:	debug('svuhelper:green')	# green
-	warning:debug('svuhelper:warning')	# yellow
-	info:	debug('svuhelper:info')		# darkblue
-	purple:	debug('svuhelper:purple')	# purple
-	error:	debug('svuhelper:error')	# red
-}
-log.error.log = console.error.bind(console)
-log.warning.log = console.error.bind(console)
 
-l(a) for a,l of log
+require('./boot')
 
 express = require('express')
 app = express()
 
-mongoose = require('mongoose')
-mongoConnectionString = process.env.MONGO_URL || 'mongodb://localhost/svu-helper'
-mongoose.connect(mongoConnectionString)
+
+global.etabits.app = app
+global.etabits.express = express
 
 
-
-
-
-
-global.etabits = {
-	baseUrl: 'https://www.svuonline.org/isis'
-	log: log
-	jsonMiddleware: require('body-parser').json()
-	express: express
-	app: app
-	data: {
-		terms: [
-			{"id": 26, "code": "S14" }
-			{"id": 27, "code": "F14" }
-		]
-		programs: [
-			{"id": 2, "code": "ISE" }
-			{"id": 7, "code": "ENG" }
-			{"id": 8, "code": "BIT" }
-			{"id": 14, "code": "BSCE" }
-			{"id": 21, "code": "BL" }
-			{"id": 27, "code": "BMC" }
-		]
-	}
-}
-global.etabits.svu = require('./wrapper/')
-
-for collectionName in ['terms', 'programs']
-	collectionData = global.etabits.data[collectionName]
-	global.etabits.data[collectionName+'ByCode'] = {}
-	global.etabits.data[collectionName+'ByCode'][row.code] = row for row in collectionData
 
 #console.log global.etabits.data
 app.use '/v0',   require('./apis/v0')

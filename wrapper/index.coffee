@@ -7,7 +7,7 @@ async = require 'async'
 encoding = require("encoding")
 cheerio = require('cheerio')
 crypto = require('crypto')
-
+_ = require('lodash')
 fs = require('fs')
 
 
@@ -29,6 +29,14 @@ log = global.etabits.log
 
 class Student
 	self = null
+	@restoreFromDocument: (doc, done)->
+		stud = new Student({
+			stud_id: doc.stud_id
+			password: doc.password
+		})
+		stud.doc = doc
+		done(null, stud)
+
 	@restoreFromToken: (token, done)->
 		Session.findOne {token: token}, (err, session)->
 			return done(err) if err
@@ -202,7 +210,7 @@ class Student
 				username: self.stud_id
 			}
 			terms: global.etabits.data.terms
-			programs: global.etabits.data.programs
+			programs: _.select(etabits.data.programs, {expose: true})
 			htmlHomeTop: ''
 			htmlHomeBottom: ''
 		}

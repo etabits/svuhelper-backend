@@ -2,7 +2,7 @@ mongoose	= require('mongoose')
 
 schema = mongoose.Schema {
 	token: String
-	student: Number
+	student: {type: Number, ref: 'User'}
 
 	deviceType:   {type: String, enum: ['a', 'm', 'w']} # Android / Web
 	description: String
