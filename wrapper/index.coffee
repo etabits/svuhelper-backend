@@ -55,7 +55,10 @@ class Student
 
 
 	@login: (stud_id, password, context, done)->
-		stud = new Student({stud_id: stud_id, password: password})
+		try
+			stud = new Student({stud_id: stud_id, password: password})
+		catch e
+			return done(e)
 		stud.getOrCreateDbObject (err, doc)->
 			return done(err) if err
 
@@ -108,7 +111,11 @@ class Student
 		self = this
 		self.stud_id = @opts.stud_id
 
-		self.studentId = parseInt(self.stud_id.match(/(\d+$)/)[0])
+		matcher = self.stud_id.match(/_(\d+)$/)
+		throw {code: 'BAD_STUD_ID_FORMAT'} if not matcher
+		#console.log matcher
+
+		self.studentId = parseInt(matcher[1])
 		log.info("Instantiated for student ##{self.studentId}")
 
 	isResponseAuthd: (httpResponse, body)->

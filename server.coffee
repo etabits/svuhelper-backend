@@ -15,6 +15,7 @@ app.use '/v0',   require('./apis/v0')
 app.use '/v0p1', require('./apis/v0p1')
 app.use '/dummy', require('./apis/dummy')
 mappedErrors = {
+	'BAD_STUD_ID_FORMAT': [400, 'BAD_STUD_ID_FORMAT', 'Please use prober format for your student id (Example: name_98765)!']
 	'BADLOGIN': [401, 'BADLOGIN', 'Bad username/password!']
 	'INVALID_TOKEN': [401, 'INVALID_TOKEN', 'Invalid session!\nPlease login again.']
 }
