@@ -81,6 +81,9 @@ v0.get '/web', loadStudentFromToken, (req, res)->
 			stud_id: req.studentObject.doc.stud_id
 			passwordExpired: req.studentObject.doc.passwordExpired
 		}
+		stats: {
+			activeUsers: etabits.stats.activeUsers
+		}
 	}
 
 v0.get '/login', loadStudentFromToken, (req, res, next)->

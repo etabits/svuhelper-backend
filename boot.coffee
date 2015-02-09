@@ -30,9 +30,19 @@ global.etabits = {
     programs: {}
     allCoursesIds: []
   }
+  stats: {
+    activeUsers: 0
+  }
 }
+
 etabits.models[m] = require("./models/#{m}") for m in ['Course', 'Program', 'Session', 'Term', 'Tutor', 'User']
 
+reloadStats = ()->
+  dateFrom = new Date(Date.now() - 3600000 * 1.5)
+  console.log dateFrom
+  etabits.models.User.count {lastActivity: {$gt: dateFrom}}, (err, activeUsers)->
+    etabits.stats.activeUsers = activeUsers
+    log.purple "#{activeUsers} in the past 1.5 hours..."
 reloadData = ()->
     async.parallel {
         courses:  (done)-> etabits.models.Course.find done
@@ -55,6 +65,8 @@ reloadData = ()->
 
 
 reloadData()
+reloadStats()
+setInterval(reloadStats, 300*1000) # Every 5 minutes
 global.etabits.svu = require('./wrapper/')
 
 
