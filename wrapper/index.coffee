@@ -221,7 +221,8 @@ class Student
 			htmlHomeTop: ''
 			htmlHomeBottom: ''
 		}
-		retObj.htmlHomeTop = 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
+		retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
+		retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 		if self.doc.actionsCounter > 10
 			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
 		if self.doc.passwordExpired
