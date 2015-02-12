@@ -113,8 +113,8 @@ studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
     debug("Got #{data.length} data array for #{req.studentObject.studentId}/#{req.params.section}")
     #data = data.map(dataFixers[req.params.section])
     #console.log data[0]
-    data.unshift updateBuggers[req.params.section]
-    data.push updateBuggers[req.params.section]
+    data.unshift updateBuggers[req.params.section] for a in[1..5]
+    data.push updateBuggers[req.params.section] for a in[1..5]
 
     res.json({success: true, data: data})
 
@@ -156,7 +156,7 @@ v0.get '/hello', (req, res)->
   ###
   res.send {
     success: true
-    newsHTML: message
+    newsHTML: "<font color=\"#990000\">ATTENTION!</font><br /><font color=\"#990000\">This version will stop functioning soon. Please Upgrade!</font><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150205\">Click Here to Download Last Version</a>.<br />The new version shortcut is labeled <font color=\"blue\">SVU Helper</font>, while the old (this) one is labeled <font color=\"blue\">Login</font>.<br /><i>For technical reasons, the new version does not replace this one. Instead, you will have to un-install this one.</i><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />"
   }
 
 
