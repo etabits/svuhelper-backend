@@ -40,10 +40,14 @@ class Student
 	@restoreFromToken: (token, done)->
 		Session.findOne {token: token}, (err, session)->
 			return done(err) if err
-			return done({code: 'INVALID_TOKEN'}) unless session
+			if not session
+				log.warning "INVALID_TOKEN: #{token}"
+				return done({code: 'INVALID_TOKEN'})
 			User.findOne {_id: session.student}, (err, doc)->
 				return done(err) if err
-				return done({code: 'INVALID_TOKEN'}) unless doc
+				if not doc
+					log.warning "INVALID_TOKEN student! #{token}"
+					return done({code: 'INVALID_TOKEN'})
 				stud = new Student({
 						stud_id: doc.stud_id
 						password: doc.password
@@ -216,13 +220,16 @@ class Student
 				student: {
 					id: self.studentId
 					username: self.stud_id
-					programs: self.doc.programs.map (p)-> p.publicObject
 				}
 				terms: global.etabits.data.terms
 				programs: _.select(etabits.data.programs, {expose: true}).map (p)-> p.publicObject
 				htmlHomeTop: ''
 				htmlHomeBottom: ''
 			}
+			for p in self.doc.programs.map( (p)-> p.publicObject )
+				p.studentEnrolled = true
+				retObj.programs.unshift(p)
+			retObj.programs = _.uniq(retObj.programs, 'id')
 			retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
 			retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 			if self.doc.actionsCounter > 10
