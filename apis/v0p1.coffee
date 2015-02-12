@@ -43,12 +43,12 @@ studentsRouter.param 'term', (req, res, next)->
 	req.svu.term = data.termsByCode[req.params.term]
 	next()
 
-studentsRouter.get '/select/:program', (req, res)->
+studentsRouter.get '/select/:program', (req, res, next)->
 	req.studentObject.get 'get_selectable_classes', {pid: req.svu.program.id}, (err, data)->
 		return next(err) if err
 		res.json({success: true, data: data})
 
-studentsRouter.get '/select/:program/:courseId', (req, res)->
+studentsRouter.get '/select/:program/:courseId', (req, res, next)->
 
 	opts= {
 		pid: req.svu.program.id,
@@ -76,7 +76,7 @@ studentsRouter.get '/select/:program/:courseId', (req, res)->
 			]
 		}
 
-studentsRouter.post '/select/:program/:courseId', etabits.jsonMiddleware, (req, res)->
+studentsRouter.post '/select/:program/:courseId', etabits.jsonMiddleware, (req, res, next)->
 	opts= {
 		pid: parseInt(req.svu.program.id),
 		cid: parseInt(req.params.courseId)
@@ -86,7 +86,7 @@ studentsRouter.post '/select/:program/:courseId', etabits.jsonMiddleware, (req, 
 	req.studentObject.get 'choose_class', opts, (err, data)-> res.json({success: true})
 
 
-studentsRouter.get '/explore/:term/:program', (req, res)->
+studentsRouter.get '/explore/:term/:program', (req, res, next)->
 	#console.log data.programsByCode[req.params.program].id
 	req.studentObject.get 'progtermcourse', {pid: req.svu.program.id}, (err, data)->
 		return next(err) if err
@@ -95,7 +95,7 @@ studentsRouter.get '/explore/:term/:program', (req, res)->
 
 		res.json({success: true, data: data.courses})
 
-studentsRouter.get '/explore/:term/:program/:courseId', (req, res)->
+studentsRouter.get '/explore/:term/:program/:courseId', (req, res, next)->
 
 	opts = {
 		pid: req.svu.program.id
@@ -131,7 +131,7 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
 		result.stud.getLoginRetObject (err, loginResult)->
 			res.send(loginResult)
 
-v0.get '/web', loadStudentFromToken, (req, res)->
+v0.get '/web', loadStudentFromToken, (req, res, next)->
 	res.send {
 		success: true
 		student: {
