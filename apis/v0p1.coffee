@@ -31,6 +31,10 @@ dataFixers = {
 data = global.etabits.data
 log = global.etabits.log
 
+daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+sortTimedClass = (a, b)->
+	"#{daysOfWeek.indexOf(a.time.day)}#{a.time.hour}".localeCompare("#{daysOfWeek.indexOf(b.time.day)}#{b.time.hour}")
+
 studentsRouter.param 'program', (req, res, next)->
 	req.svu.program = data.programsByCode[req.params.program]
 	next()
@@ -63,7 +67,13 @@ studentsRouter.get '/select/:program/:courseId', (req, res)->
 			_.assign(tt, available[tt.number])
 		res.json {
 			success: true
-			data: results.tutorTime
+			data: results.tutorTime.sort(sortTimedClass)
+			messages: [
+				{
+					type: 'info'
+					text: 'Classes are now sorted by date (Sunday through Saturday), not by class number.'
+				}
+			]
 		}
 
 studentsRouter.post '/select/:program/:courseId', etabits.jsonMiddleware, (req, res)->
