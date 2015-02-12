@@ -64,17 +64,17 @@ class Student
 
 			async.parallel {
 				token: (done)-> crypto.randomBytes 18, done
-				classes: (done)->
+				myprograms: (done)->
 					stud.retrieveNewCookie site, (err, cookie)->
 						log.info("getting new cookie for #{stud_id}:#{password} yielded #{cookie}")
 						return done(err) if err
-						action = Actions.classes
+						action = Actions.myprograms
 						stud.performRequestWithCookie action.params(), cookie, (err, httpResponse, body)->
 							log.info("cookied request failed") if err
 							return done(err) if err
 							doc.mainCookie = cookie
 							self.getSelector body, (err, $)->
-								action.handler stud, {classes: $}, done
+								action.handler stud, {myprograms: $}, done
 				moodle: (done)->
 					moodleRequest "https://moodle.svuonline.org/login/token.php?username=#{stud_id}&password=#{password}&service=moodle_mobile_app", (err, resp, json)->
 						done(err, json)
@@ -96,9 +96,10 @@ class Student
 					doc.stud_id = stud_id
 					doc.password = password
 					doc.moodleToken = results.moodle.token
+					doc.programs = results.myprograms.map (p)-> p.id
 					doc.save (err)->
 						stud.session = session
-						done(err, {classes: results.classes, doc: doc, stud: stud})
+						done(err, {doc: doc, stud: stud})
 				
 
 
@@ -208,26 +209,27 @@ class Student
 
 
 	getLoginRetObject: (done)->
-		#self.doc.populate 'activeSession', ()->
-		retObj = {
-			success: true
-			token: self.session.token
-			student: {
-				id: self.studentId
-				username: self.stud_id
+		self.doc.populate 'programs', ()->
+			retObj = {
+				success: true
+				token: self.session.token
+				student: {
+					id: self.studentId
+					username: self.stud_id
+					programs: self.doc.programs.map (p)-> p.publicObject
+				}
+				terms: global.etabits.data.terms
+				programs: _.select(etabits.data.programs, {expose: true}).map (p)-> p.publicObject
+				htmlHomeTop: ''
+				htmlHomeBottom: ''
 			}
-			terms: global.etabits.data.terms
-			programs: _.select(etabits.data.programs, {expose: true})
-			htmlHomeTop: ''
-			htmlHomeBottom: ''
-		}
-		retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
-		retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
-		if self.doc.actionsCounter > 10
-			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
-		if self.doc.passwordExpired
-			retObj.htmlHomeTop = '<font color=\"#990000\">PASSWORD EXPIRED!</font><br /><p>Please <a href="https://svuonline.org/isis/">login to your account at svuonline.org</a> and change it NOW!</p>'
-		done(null, retObj)
+			retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
+			retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
+			if self.doc.actionsCounter > 10
+				retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
+			if self.doc.passwordExpired
+				retObj.htmlHomeTop = '<font color=\"#990000\">PASSWORD EXPIRED!</font><br /><p>Please <a href="https://svuonline.org/isis/">login to your account at svuonline.org</a> and change it NOW!</p>'
+			done(null, retObj)
 
 	getSelector: (body, cb)->
 		body = encoding.convert(body, 'utf8', 'WINDOWS-1256').toString()
@@ -280,7 +282,7 @@ class Student
 			resObj[i.name] = i.$ || i.json for i in results
 
 			try
-				action.handler(self, resObj, cb)
+				action.handler(self, resObj, cb, options)
 			catch e
 				log.error(e)
 				for r in results

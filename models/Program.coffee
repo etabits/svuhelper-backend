@@ -9,6 +9,12 @@ schema = mongoose.Schema {
   expose: {type: Boolean, default: false}
 }
 
+schema.virtual('publicObject').get ()-> {
+  id: this.id
+  code: this.code
+  name: this.name
+}
+
 
 Model = mongoose.model('Program', schema)
 

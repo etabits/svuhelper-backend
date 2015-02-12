@@ -1,5 +1,6 @@
 _ = require('lodash')
 fs = require('fs')
+async = require 'async'
 
 loadStudentFromToken = (req, res, next)->
 	etabits.svu.Student.restoreFromToken req.query.token, (err, stud)->
@@ -14,6 +15,7 @@ loadStudentFromToken = (req, res, next)->
 			
 			++req.studentObject.doc.actionsCounter
 			req.studentObject.doc.save()
+		req.svu = {}
 		next()
 		
 studentsRouter = etabits.express.Router()
@@ -29,9 +31,54 @@ dataFixers = {
 data = global.etabits.data
 log = global.etabits.log
 
+studentsRouter.param 'program', (req, res, next)->
+	req.svu.program = data.programsByCode[req.params.program]
+	next()
+
+studentsRouter.param 'term', (req, res, next)->
+	req.svu.term = data.termsByCode[req.params.term]
+	next()
+
+studentsRouter.get '/select/:program', (req, res)->
+	req.studentObject.get 'get_selectable_classes', {pid: req.svu.program.id}, (err, data)->
+		return next(err) if err
+		res.json({success: true, data: data})
+
+studentsRouter.get '/select/:program/:courseId', (req, res)->
+
+	opts= {
+		pid: req.svu.program.id,
+		cid: parseInt(req.params.courseId)
+		tid: 27 #FIXME!
+	}
+	async.parallel {
+		available: (done)->
+			req.studentObject.get 'get_selectable_classes2', opts, done
+		tutorTime: (done)->
+			req.studentObject.get 'explore_classes', opts, done
+
+	}, (err, results)->
+		available = _.indexBy(results.available, 'number')
+		for tt in results.tutorTime
+			_.assign(tt, available[tt.number])
+		res.json {
+			success: true
+			data: results.tutorTime
+		}
+
+studentsRouter.post '/select/:program/:courseId', etabits.jsonMiddleware, (req, res)->
+	opts= {
+		pid: parseInt(req.svu.program.id),
+		cid: parseInt(req.params.courseId)
+		tid: 27 #FIXME!
+		classId: parseInt(req.body.class)
+	}
+	req.studentObject.get 'choose_class', opts, (err, data)-> res.json({success: true})
+
+
 studentsRouter.get '/explore/:term/:program', (req, res)->
 	#console.log data.programsByCode[req.params.program].id
-	req.studentObject.get 'progtermcourse', {pid: data.programsByCode[req.params.program].id}, (err, data)->
+	req.studentObject.get 'progtermcourse', {pid: req.svu.program.id}, (err, data)->
 		return next(err) if err
 
 		log.info("Got #{data.courses.length} data array for #{req.studentObject.studentId}"+req.url.split('?')[0])
@@ -41,8 +88,8 @@ studentsRouter.get '/explore/:term/:program', (req, res)->
 studentsRouter.get '/explore/:term/:program/:courseId', (req, res)->
 
 	opts = {
-		pid: data.programsByCode[req.params.program].id
-		tid: data.termsByCode[req.params.term].id
+		pid: req.svu.program.id
+		tid: req.svu.term.id
 		cid: parseInt(req.params.courseId)
 	}
 	#console.log opts

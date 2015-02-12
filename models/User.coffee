@@ -17,6 +17,7 @@ schema = mongoose.Schema {
 
 	passwordExpired: {type: Boolean, default: false}
 
+	programs: [{type: Number, ref: 'Program'}]
 	# Deprecated
 	sessionToken: String
 }

@@ -6,6 +6,12 @@ schema = mongoose.Schema {
 	name: String
 }
 
+schema.virtual('publicObject').get ()-> {
+  id: this.id
+  code: this.code
+  name: this.name
+}
+
 
 Model = mongoose.model('Course', schema)
 
