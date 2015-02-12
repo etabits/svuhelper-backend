@@ -157,19 +157,7 @@ v0.get '/hello', (req, res)->
   res.send {
     success: true
     newsHTML: "<font color=\"#990000\">ATTENTION!</font><br /><font color=\"#990000\">THIS VERSION WILL STOP FUNCTIONING VERY SOON. UPGRADE NOW!</font><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Click Here to Download Last Version</a>.<br />The new version shortcut is labeled <font color=\"blue\">SVU Helper</font>, while the old (this) one is labeled <font color=\"blue\">Login</font>.<br /><i>For technical reasons, the new version does not replace this one. Instead, you will have to un-install this one.</i><br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
-    <br /><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a>
+    <br /><font size=\"50pt\"><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150212\">Download Last Version</a></font>
     "
   }
 
