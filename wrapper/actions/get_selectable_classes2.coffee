@@ -41,7 +41,7 @@ module.exports = {
           totalCapacity: parseInt(cInfo[2])
           number: parseInt(cInfo[3])
           #course: etabits.data.coursesByCode[cInfo[4]]
-          chosen: chosenClass==c.id
+          chosen: chosenClass.id==c.id
         }
       if not foundChosen
         result.push {
