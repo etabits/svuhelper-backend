@@ -1,3 +1,4 @@
+"use strict"
 request = require('request')
 moodleRequest = request.defaults({json: true})
 baseRequest = request.defaults({followRedirect: false, encoding: null})
@@ -28,7 +29,6 @@ log = global.etabits.log
 
 
 class Student
-	self = null
 	@restoreFromDocument: (doc, done)->
 		stud = new Student({
 			stud_id: doc.stud_id
@@ -77,7 +77,7 @@ class Student
 							log.info("cookied request failed") if err
 							return done(err) if err
 							doc.mainCookie = cookie
-							self.getSelector body, (err, $)->
+							stud.getSelector body, (err, $)->
 								action.handler stud, {myprograms: $}, done
 				moodle: (done)->
 					moodleRequest "https://moodle.svuonline.org/login/token.php?username=#{stud_id}&password=#{password}&service=moodle_mobile_app", (err, resp, json)->
@@ -113,6 +113,7 @@ class Student
 	## Instantiation
 	constructor: (@opts={}) ->
 		#console.log @opts
+		#console.log(self)
 		self = this
 		self.stud_id = @opts.stud_id
 
@@ -124,6 +125,7 @@ class Student
 		log.info("Instantiated for student ##{self.studentId}")
 
 	isResponseAuthd: (httpResponse, body)->
+		self = this
 		body = body.toString()
 
 		self.doc.passwordExpired = -1 != body.indexOf('change_pass.php?type=expiredPass')
@@ -138,6 +140,7 @@ class Student
 
 
 	getOrCreateDbObject: (done)->
+		self = this
 		return done(null, self.doc) if self.doc
 		log.info("Getting db object for ##{self.studentId}")
 		User.findById self.studentId, (err, doc)->
@@ -148,6 +151,7 @@ class Student
 				done(null, self.doc)
 
 	retrieveNewCookie: (site, done)->
+		self = this
 		log.info("Retrieving New Cookie for ##{self.studentId}")
 		data = {
 			from_page:	'/isis/index.php'
@@ -167,6 +171,7 @@ class Student
 			#self.checkCookie(site, cookie, done)
 
 	performRequestWithCookie: (params, cookie, done)->
+		self = this
 		#self ?= this
 		#console.log(this, self)
 		params.headers = {Cookie: cookie}
@@ -191,6 +196,7 @@ class Student
 
 
 	performRequest: (params, done)->
+		self = this
 		trial = (done, results)->
 			self.getOrCreateDbObject (err, cookie)->
 				self.performRequestWithCookie params, cookie[site], (err, httpResponse, body)->
@@ -213,6 +219,7 @@ class Student
 
 
 	getLoginRetObject: (done)->
+		self = this
 		self.doc.populate 'programs', ()->
 			retObj = {
 				success: true
@@ -239,6 +246,7 @@ class Student
 			done(null, retObj)
 
 	getSelector: (body, cb)->
+		self = this
 		body = encoding.convert(body, 'utf8', 'WINDOWS-1256').toString()
 		start = body.indexOf('<img src="images/webdev_arena.gif" />')
 		end = body.indexOf('<iframe width=199 height=178 name="gToday:normal:agenda.js" id="gToday:normal:agenda.js"')
@@ -257,9 +265,11 @@ class Student
 
 
 	performAnyRequest: (requestParameters, done)->
+		self = this
 		name = requestParameters.$name
 		delete requestParameters.$name
 		if requestParameters.url
+			#console.log self, this
 			self.performRequest requestParameters, (err, res)->
 				return done(err) if err
 				self.getSelector res.body, (err, $)->
@@ -273,6 +283,7 @@ class Student
 
 
 	get: (actionId, options, cb)->
+		self = this
 		log.info("Getting #{actionId} for ##{self.studentId}")
 		action = Actions[actionId]
 		requestParameters = action.params(self, options)
@@ -281,7 +292,7 @@ class Student
 			requestParameters = [requestParameters]
 
 		#console.log requestParameters
-		async.map requestParameters, self.performAnyRequest, (err, results)->
+		async.map requestParameters, self.performAnyRequest.bind(self), (err, results)->
 			if err
 				console.log '>>>',err
 				return cb(err)

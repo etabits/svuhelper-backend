@@ -1,3 +1,4 @@
+"use strict"
 _ = require('lodash')
 
 htmlUtils = require('../htmlUtils')

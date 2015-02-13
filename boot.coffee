@@ -1,3 +1,4 @@
+"use strict"
 debug = require('debug')
 log = {
   verbose:debug('svuhelper:verbose')  # blue

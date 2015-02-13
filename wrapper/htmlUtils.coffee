@@ -1,3 +1,4 @@
+"use strict"
 _ = require('lodash')
 log = global.etabits.log
 

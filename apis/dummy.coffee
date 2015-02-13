@@ -1,3 +1,4 @@
+"use strict"
 _ = require('lodash')
 fs = require('fs')
 

@@ -1,3 +1,4 @@
+"use strict"
 Actions = {}
 Actions['explore_classes'] = require('./explore_classes')
 Actions['progtermcourse'] = require('./progtermcourse')

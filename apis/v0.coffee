@@ -1,3 +1,4 @@
+"use strict"
 _ = require('lodash')
 debug = require('debug')('svu:debug')
 error = require('debug')('svu:error')
