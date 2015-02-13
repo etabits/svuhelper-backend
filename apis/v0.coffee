@@ -128,8 +128,8 @@ v0.post '/login', etabits.jsonMiddleware, (req, res, next)->
     
     return res.send({success: false, errorMessage: 'Bad Login'}) if err
 
-    data.classes.unshift updateBuggers['classes']
-    data.classes.push updateBuggers['classes']
+    #data.classes.unshift updateBuggers['classes']
+    #data.classes.push updateBuggers['classes']
     res.send {
       success: true
       token: data.stud.session.token
