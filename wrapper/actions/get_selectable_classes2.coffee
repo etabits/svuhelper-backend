@@ -24,13 +24,17 @@ module.exports = {
       sData = htmlUtils.selectToData(s, 'id')
       console.log sData
       chosenClass = null
+      foundChosen = false
+
       for c in sData
         cInfo = c.label.match(/^\[ (\d+) \/ (\d+) \] C(\d+)-\w+_(\w+)_C\d+_(?:F|S)\d{2}$/i)
         if not cInfo
-          chosenClass = c.label.match(/^\w+_\w+_C(\d+)_(?:F|S)\d{2}$/i)[1]
-          chosenClass = c.id
+          chosenClass = c
+          chosenClass.info = chosenClass.label.match(/^\w+_\w+_C(\d+)_(?:F|S)\d{2}$/i)
           continue
 
+        if chosenClass.id==c.id
+          foundChosen = true
         result.push {
           id: parseInt(c.id)
           totalEnrolled: parseInt(cInfo[1])
@@ -39,6 +43,16 @@ module.exports = {
           #course: etabits.data.coursesByCode[cInfo[4]]
           chosen: chosenClass==c.id
         }
+      if not foundChosen
+        result.push {
+          id: parseInt(chosenClass.id)
+          totalEnrolled: 100
+          totalCapacity: 100
+          number: parseInt(chosenClass.info[1])
+          #course: etabits.data.coursesByCode[cInfo[4]]
+          chosen: true
+        }
+
       break
       #courseCode = sData[0].label.match(/\[ (\d+) \/ (\d+) \] C(\d+)-\w+_\w+_C\d+_(?:F|S)\d{2}$/i)
 

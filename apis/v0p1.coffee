@@ -64,7 +64,7 @@ studentsRouter.get '/select/:program/:courseId', (req, res, next)->
 	}, (err, results)->
 		available = _.indexBy(results.available, 'number')
 		for tt in results.tutorTime
-			_.assign(tt, available[tt.number])
+			_.assign(tt, available[tt.number] || {chosen: false, totalCapacity: 100, totalEnrolled: 100})
 		res.json {
 			success: true
 			data: results.tutorTime.sort(sortTimedClass)
