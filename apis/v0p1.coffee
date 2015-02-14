@@ -149,6 +149,7 @@ v0.get '/login', (req, res, next)->
 	loadStudentFromToken req, res, (err)->
 		if err
 			if 'INVALID_TOKEN'==err.code && req.query.versionCode < etabits.cfg.minVersionCode
+				log.purple "Telling them to update (#{req.url})"
 				retObj = {
 					success: true
 					token: ''
