@@ -162,7 +162,7 @@ v0.get '/login', (req, res, next)->
 					<big>Please click back and login again NOW!</big><br />
 					<big>مشكلة في الجلسة، الرجاء النقر على زر عودة وإعادة تسجيل الدخول الآن</big><br />
 					أو قم بالتحديث إلى آخر نسخة:<br />
-					<center><big><big><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_oldies_20150214\">تجميل التحديث</a></big></big></center>
+					<big><big><big><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_oldies_20150214\">تحميل التحديث</a></big></big></big>
 					</big>'
 				}
 				retObj.htmlHomeBottom = retObj.htmlHomeTop
