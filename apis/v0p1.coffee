@@ -71,6 +71,7 @@ studentsRouter.get '/select/:program/:courseId', (req, res, next)->
 			data: results.tutorTime.sort(sortTimedClass)
 			messages: [
 				{
+					hideFromApp: true
 					type: 'info'
 					text: 'Classes are now sorted by date (Sunday through Saturday), not by class number.'
 				}
