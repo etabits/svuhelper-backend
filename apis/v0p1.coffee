@@ -158,10 +158,12 @@ v0.get '/login', (req, res, next)->
 					}
 					terms: []
 					programs: []
-					htmlHomeTop: '<big><big>Please click back and login again NOW!</big><br />
+					htmlHomeTop: '<big>
+					<big>Please click back and login again NOW!</big><br />
 					<big>مشكلة في الجلسة، الرجاء النقر على زر عودة وإعادة تسجيل الدخول الآن</big><br />
 					أو قم بالتحديث إلى آخر نسخة:<br />
-					<big><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_oldies_20150214\">تحديث</a</big>'
+					<center><big><big><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_oldies_20150214\">تجميل التحديث</a></big></big></center>
+					</big>'
 				}
 				retObj.htmlHomeBottom = retObj.htmlHomeTop
 				res.send(retObj)
