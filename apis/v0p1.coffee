@@ -145,31 +145,51 @@ v0.get '/web', loadStudentFromToken, (req, res, next)->
 		}
 	}
 
-v0.get '/login', loadStudentFromToken, (req, res, next)->
-	log.info("Resuming #{req.studentObject.studentId} session...")
-	req.studentObject.getLoginRetObject (err, loginResult)->
-		res.send(loginResult)
+v0.get '/login', (req, res, next)->
+	loadStudentFromToken req, res, (err)->
+		if err
+			if 'INVALID_TOKEN'==err.code && req.query.versionCode < etabits.cfg.minVersionCode
+				retObj = {
+					success: true
+					token: ''
+					student: {
+						id: 0
+						username: 's_0'
+					}
+					terms: []
+					programs: []
+					htmlHomeTop: '<big>Please click back and login again NOW!</big>\n<big>الرجاء النقر على زر عودة وإعادة تسجيل الدخول الآن</big>'
+					htmlHomeBottom: '<big>Please click back and login again NOW!</big>\n<big>الرجاء النقر على زر عودة وإعادة تسجيل الدخول الآن</big>'
+				}
+				res.send(retObj)
+			else
+				return next(err)
+		else
+			log.info("Resuming #{req.studentObject.studentId} session...")
+			req.studentObject.getLoginRetObject (err, loginResult)->
+				return next(err) if err
+				if req.query.versionCode < etabits.cfg.minVersionCode
+					loginResult.htmlHomeTop = etabits.cfg.messageUpdate
+				res.send(loginResult)
 
 
-cfg = {}
 fs.readFile "cfg.json", 'utf-8', (err, data)->
 	try 
-		cfg = JSON.parse(data)
-		console.log cfg
+		etabits.cfg = JSON.parse(data)
 	catch e
 		console.log e
 v0.get '/hello', (req, res)->
-	message = cfg.messageBase
+	message = etabits.cfg.messageBase
 	
-	if parseInt(req.query.versionCode) < cfg.minVersionCode
-		message += cfg.messageUpdate
+	if parseInt(req.query.versionCode) < etabits.cfg.minVersionCode
+		message += etabits.cfg.messageUpdate
 	else
-		message += cfg.messageOther
+		message += etabits.cfg.messageOther
 
 	res.send {
 		success: true
 		newsHTML: message
-		lastVersion: cfg.minVersionCode
+		lastVersion: etabits.cfg.minVersionCode
 	}
 
 
