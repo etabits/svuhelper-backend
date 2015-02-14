@@ -161,7 +161,7 @@ v0.get '/login', (req, res, next)->
 					htmlHomeTop: '<big><big>Please click back and login again NOW!</big><br />
 					<big>مشكلة في الجلسة، الرجاء النقر على زر عودة وإعادة تسجيل الدخول الآن</big><br />
 					أو قم بالتحديث إلى آخر نسخة:<br />
-					<big><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_20150214\">تحديث</a</big>'
+					<big><a href=\"http://www.etabits.com/beta/com.etabits.svu.helper.apk?via=app_note_oldies_20150214\">تحديث</a</big>'
 				}
 				retObj.htmlHomeBottom = retObj.htmlHomeTop
 				res.send(retObj)
