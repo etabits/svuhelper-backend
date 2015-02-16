@@ -19,7 +19,7 @@ mongoose.connect(mongoConnectionString)
 async = require('async')
 
 global.etabits = {
-  baseUrl: 'https://www.svuonline.org/isis'
+  baseUrl: 'http://www.svuonline.org/isis'
   log: log
   jsonMiddleware: require('body-parser').json()
   models: {}
@@ -43,6 +43,7 @@ reloadStats = ()->
   console.log dateFrom
   etabits.models.User.count {lastActivity: {$gt: dateFrom}}, (err, activeUsers)->
     etabits.stats.activeUsers = activeUsers
+    etabits.stats.activeUsers = 29
     log.purple "#{activeUsers} in the past 1.5 hours..."
 reloadData = ()->
     async.parallel {
