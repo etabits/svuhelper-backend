@@ -233,15 +233,23 @@ class Student
 				htmlHomeTop: ''
 				htmlHomeBottom: ''
 			}
+
 			for p in self.doc.programs.map( (p)-> p.publicObject )
 				p.studentEnrolled = true
 				retObj.programs.unshift(p)
 			retObj.programs = _.uniq(retObj.programs, 'id')
 			retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
-			retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
+			retObj.htmlHomeTop += '''<big>
+تعميم من الجامعة:
+<br />
+<strong>حل مشكلة برنامج مشغل الجلسات</strong><br />
+الطلاب الأعزاء<br />
+تم حل مشكلة برنامج مشغل الجلسات المتزامنة التي حصلت ظهر اليوم الاثنين 16/2/2015، بإمكانكم تحميل النسخة المعدلة من البرنامج
+<a href="http://hosting.svuonline.org/svu_programs/new/SVUOnlineSessionsSetup.exe">من هنا</a>
+</big>'''
+			##retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 
-			if self.doc.actionsCounter > 10
-				retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
+			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
 
 			if self.doc.passwordExpired
 				retObj.htmlHomeTop = '<font color=\"#990000\">PASSWORD EXPIRED!</font><br /><p>Please <a href="https://svuonline.org/isis/">login to your account at svuonline.org</a> and change it NOW!</p>'
