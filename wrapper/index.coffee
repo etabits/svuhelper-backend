@@ -240,12 +240,12 @@ class Student
 			retObj.programs = _.uniq(retObj.programs, 'id')
 			retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
 			retObj.htmlHomeTop += '''<big>
-تعميم من الجامعة:
+<u>تعميم من الجامعة:</u>
 <br />
 <strong>حل مشكلة برنامج مشغل الجلسات</strong><br />
 الطلاب الأعزاء<br />
 تم حل مشكلة برنامج مشغل الجلسات المتزامنة التي حصلت ظهر اليوم الاثنين 16/2/2015، بإمكانكم تحميل النسخة المعدلة من البرنامج
-<a href="http://hosting.svuonline.org/svu_programs/new/SVUOnlineSessionsSetup.exe">من هنا</a>
+<a href="http://svuhelper.etabits.com/r/hosting.svuonline.org/svu_programs/new/SVUOnlineSessionsSetup.exe">من هنا</a>
 </big>'''
 			##retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 
