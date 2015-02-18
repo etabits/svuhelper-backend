@@ -19,7 +19,7 @@ mongoose.connect(mongoConnectionString)
 async = require('async')
 
 global.etabits = {
-  baseUrl: 'http://www.svuonline.org/isis'
+  baseUrl: 'https://www.svuonline.org/isis'
   log: log
   jsonMiddleware: require('body-parser').json()
   models: {}
