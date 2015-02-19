@@ -9,4 +9,5 @@ Actions['myprograms'] = require('./myprograms')
 Actions['get_selectable_classes'] = require('./get_selectable_classes')
 Actions['get_selectable_classes2'] = require('./get_selectable_classes2')
 Actions['choose_class'] = require('./choose_class')
+Actions['classes_time'] = require('./classes_time')
 module.exports = Actions

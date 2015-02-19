@@ -50,7 +50,6 @@ studentsRouter.get '/select/:program', (req, res, next)->
 		res.json({success: true, data: data})
 
 studentsRouter.get '/select/:program/:courseId', (req, res, next)->
-
 	opts= {
 		pid: req.svu.program.id,
 		cid: parseInt(req.params.courseId)
@@ -114,7 +113,26 @@ studentsRouter.get '/explore/:term/:program/:courseId', (req, res, next)->
 		res.json({success: true, data: data})
 
 
-studentsRouter.get '/:section(exams|results|classes)', (req, res, next)->
+studentsRouter.get '/classes', (req, res, next)->
+	req.studentObject.get 'classes', {}, (err, classes)->
+		opts= {
+			courses: []
+			tid: 27 #FIXME!
+		}
+		for c in classes
+			opts.courses.push etabits.data.coursesByCode[c.course.code]._id
+		req.studentObject.get 'classes_time', opts, (err, data)->
+			for c in classes
+				time = _.select(data, {course: c.course.code, class: c.number})[0]
+				c.time = {
+					hour: time.hour
+					day: time.day
+				}
+			res.json({success: true, data: classes.sort(sortTimedClass)})
+
+
+
+studentsRouter.get '/:section(exams|results)', (req, res, next)->
 	#console.log req.params
 	req.studentObject.get req.params.section, {}, (err, data)->
 		return next(err) if err
