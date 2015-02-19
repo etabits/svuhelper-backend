@@ -34,6 +34,9 @@ log = global.etabits.log
 
 daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 sortTimedClass = (a, b)->
+	return  1 if not a.time
+	return -1 if not b.time
+
 	"#{daysOfWeek.indexOf(a.time.day)}#{a.time.hour}".localeCompare("#{daysOfWeek.indexOf(b.time.day)}#{b.time.hour}")
 
 studentsRouter.param 'program', (req, res, next)->
@@ -117,13 +120,14 @@ studentsRouter.get '/classes', (req, res, next)->
 	req.studentObject.get 'classes', {}, (err, classes)->
 		opts= {
 			courses: []
-			tid: 27 #FIXME!
+			tid: if 0 == _.select(classes, {term: {code: 'F14'}}).length then 26 else 27 #FIXME!
 		}
 		for c in classes
 			opts.courses.push etabits.data.coursesByCode[c.course.code]._id
 		req.studentObject.get 'classes_time', opts, (err, data)->
 			for c in classes
 				time = _.select(data, {course: c.course.code, class: c.number})[0]
+				continue if not time
 				c.time = {
 					hour: time.hour
 					day: time.day
