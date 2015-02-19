@@ -124,11 +124,14 @@ studentsRouter.get '/classes', (req, res, next)->
 			tid: term._id #FIXME!
 		}
 		for c in classes
-			opts.courses.push etabits.data.coursesByCode[c.course.code]._id
+			opts.courses.push _.select(etabits.data.programsByCode[c.course.program].courses, {code: c.course.code})[0]._id
+		#console.log(opts)
 		req.studentObject.get 'classes_time', opts, (err, data)->
 			for c in classes
 				time = _.select(data, {course: c.course.code, class: c.number})[0]
-				continue if not time
+				if not time
+					log.warning "Time not found for", c
+					continue
 				c.time = {
 					hour: time.hour
 					day: time.day
