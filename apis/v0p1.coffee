@@ -118,9 +118,10 @@ studentsRouter.get '/explore/:term/:program/:courseId', (req, res, next)->
 
 studentsRouter.get '/classes', (req, res, next)->
 	req.studentObject.get 'classes', {}, (err, classes)->
+		term = if 0==_.select(classes, {term: {code: etabits.settings.currentTerm.code}}).length then etabits.settings.previousTerm else etabits.settings.currentTerm
 		opts= {
 			courses: []
-			tid: if 0 == _.select(classes, {term: {code: 'F14'}}).length then 26 else 27 #FIXME!
+			tid: term._id #FIXME!
 		}
 		for c in classes
 			opts.courses.push etabits.data.coursesByCode[c.course.code]._id
@@ -132,7 +133,8 @@ studentsRouter.get '/classes', (req, res, next)->
 					hour: time.hour
 					day: time.day
 				}
-			res.json({success: true, data: classes.sort(sortTimedClass)})
+			classes = _.chain(classes).select({term: {code: term.code}}).sort(sortTimedClass).value()
+			res.json({success: true, data: classes})
 
 
 

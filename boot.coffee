@@ -34,6 +34,10 @@ global.etabits = {
   stats: {
     activeUsers: 0
   }
+  settings: {
+    currentTerm: {"_id": 27, "code": "F14" }
+    previousTerm: {"_id": 26, "code": "S14" }
+  }
 }
 
 etabits.models[m] = require("./models/#{m}") for m in ['Course', 'Program', 'Session', 'Term', 'Tutor', 'User']
