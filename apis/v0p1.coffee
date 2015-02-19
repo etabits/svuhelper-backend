@@ -123,6 +123,7 @@ studentsRouter.get '/classes', (req, res, next)->
 			courses: []
 			tid: term._id #FIXME!
 		}
+		classes = _.select(classes, {term: {code: term.code}})
 		for c in classes
 			opts.courses.push _.select(etabits.data.programsByCode[c.course.program].courses, {code: c.course.code})[0]._id
 		#console.log(opts)
@@ -136,7 +137,7 @@ studentsRouter.get '/classes', (req, res, next)->
 					hour: time.hour
 					day: time.day
 				}
-			classes = _.chain(classes).select({term: {code: term.code}}).sort(sortTimedClass).value()
+			classes = _.chain(classes).sort(sortTimedClass).value()
 			res.json({success: true, data: classes})
 
 
