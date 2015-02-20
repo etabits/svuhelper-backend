@@ -125,7 +125,11 @@ studentsRouter.get '/classes', (req, res, next)->
 		}
 		classes = _.select(classes, {term: {code: term.code}})
 		for c in classes
-			opts.courses.push _.select(etabits.data.programsByCode[c.course.program].courses, {code: c.course.code})[0]._id
+			course = _.select(etabits.data.programsByCode[c.course.program].courses, {code: c.course.code})[0]
+			if not course
+				log.warning "Could not find course info for", c
+				continue
+			opts.courses.push course._id
 		#console.log(opts)
 		req.studentObject.get 'classes_time', opts, (err, data)->
 			for c in classes
