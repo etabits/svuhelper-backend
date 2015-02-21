@@ -240,12 +240,16 @@ class Student
 			retObj.programs = _.uniq(retObj.programs, 'id')
 			retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
 			retObj.htmlHomeTop += '''<big>
-<u>تعميم من الجامعة:</u>
+<u>تعميم من الجامعة (ليس له علاقة ببرنامج مساعد الطالب):</u>
 <br />
-<strong>حل مشكلة برنامج مشغل الجلسات</strong><br />
+<strong> الدخول إلى الموقع ، وتحديث لبرنامج مشغل الجلسات‎ (على الكومبيوتر)</strong><br />
 الطلاب الأعزاء<br />
-تم حل مشكلة برنامج مشغل الجلسات المتزامنة التي حصلت ظهر اليوم الاثنين 16/2/2015، بإمكانكم تحميل النسخة المعدلة من البرنامج
-<a href="http://svuhelper.etabits.com/r/hosting.svuonline.org/svu_programs/new/SVUOnlineSessionsSetup.exe">من هنا</a>
+قد تواجه البعض منكم مشكلة عدم القدرة على الدخول إلى موقع الجامعة الافتراضية السورية، إذ أن الرابط لموقع الجامعة قد تغير ليصبح:<br />
+<a href="http://svuhelper.etabits.com/r/www.svuonline.org/SVUIS/index.php">https://www.svuonline.org/SVUIS/index.php</a><br />
+بإمكانكم حل المشكلة من خلال الذهاب إلى العنوان:<br />
+<a href="http://svuhelper.etabits.com/r/www.svuonline.org/">www.svuonline.org</a><br />
+كما نرجو منكم تحميل النسخة المعدلة من برنامج مشغل الجلسات المتزامنة، إذ أنه قد تم إجراء تحديثات عليه بتاريخ اليوم: 18/2/2015 عن طريق صفحة Tutor User Guides، أو مباشرة من خلال الرابط:
+<a href="http://svuhelper.etabits.com/r/hosting.svuonline.org/svu_programs/new/SVUOnlineSessionsSetup.exe">أنقر هنا لتحميل برنامج مشغل المحاضرات النسخة الأخيرة لجهاز الكومبيوتر</a>
 </big>'''
 			##retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 
