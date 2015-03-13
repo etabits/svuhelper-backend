@@ -1,5 +1,7 @@
 "use strict"
+fs = require('fs')
 debug = require('debug')
+
 log = {
   verbose:debug('svuhelper:verbose')  # blue
   green:  debug('svuhelper:green')  # green
@@ -38,7 +40,16 @@ global.etabits = {
     currentTerm: {"_id": 27, "code": "F14" }
     previousTerm: {"_id": 26, "code": "S14" }
   }
+  htmlFragments: {}
 }
+#etabits.getHtmlFragment()
+fs.readdir './misc/htmlFragments', (err, files)->
+  fullPathFiles = files.map (f)-> "./misc/htmlFragments/#{f}"
+  async.map fullPathFiles, fs.readFile, (err, result)->
+    for i in [0..files.length-1]
+      etabits.htmlFragments[files[i].replace(/\.html$/, '')] = result[i].toString('utf-8')
+
+
 
 etabits.models[m] = require("./models/#{m}") for m in ['Course', 'Program', 'Session', 'Term', 'Tutor', 'User']
 

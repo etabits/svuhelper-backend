@@ -239,24 +239,13 @@ class Student
 				retObj.programs.unshift(p)
 			retObj.programs = _.uniq(retObj.programs, 'id')
 			retObj.htmlHomeTop = "<font color=\"#000099\"><i>#{etabits.stats.activeUsers} users online</i></font><br />"
-			retObj.htmlHomeTop += '''<big>
-<u>تعميم من الجامعة (ليس له علاقة ببرنامج مساعد الطالب):</u>
-<br />
-<strong> الدخول إلى الموقع ، وتحديث لبرنامج مشغل الجلسات‎ (على الكومبيوتر)</strong><br />
-الطلاب الأعزاء<br />
-قد تواجه البعض منكم مشكلة عدم القدرة على الدخول إلى موقع الجامعة الافتراضية السورية، إذ أن الرابط لموقع الجامعة قد تغير ليصبح:<br />
-<a href="http://svuhelper.etabits.com/r/www.svuonline.org/SVUIS/index.php">https://www.svuonline.org/SVUIS/index.php</a><br />
-بإمكانكم حل المشكلة من خلال الذهاب إلى العنوان:<br />
-<a href="http://svuhelper.etabits.com/r/www.svuonline.org/">www.svuonline.org</a><br />
-كما نرجو منكم تحميل النسخة المعدلة من برنامج مشغل الجلسات المتزامنة، إذ أنه قد تم إجراء تحديثات عليه بتاريخ اليوم: 18/2/2015 عن طريق صفحة Tutor User Guides، أو مباشرة من خلال الرابط:
-<a href="http://svuhelper.etabits.com/r/hosting.svuonline.org/svu_programs/new/SVUOnlineSessionsSetup.exe">أنقر هنا لتحميل برنامج مشغل المحاضرات النسخة الأخيرة لجهاز الكومبيوتر</a>
-</big>'''
+			retObj.htmlHomeTop += etabits.htmlFragments['201403Announcement']
 			##retObj.htmlHomeTop += 'Got any question? Send us a message to <a href="http://www.facebook.com/SVUHelper">our Facebook page</a>. Your feedback is highly appreciated!'
 
 			retObj.htmlHomeBottom = '<a href="http://www.facebook.com/SVUHelper">fb.com/SVUHelper</a>: App Facebook page'
 
 			if self.doc.passwordExpired
-				retObj.htmlHomeTop = '<font color=\"#990000\">PASSWORD EXPIRED!</font><br /><p>Please <a href="https://svuonline.org/isis/">login to your account at svuonline.org</a> and change it NOW!</p>'
+				retObj.htmlHomeTop = etabits.htmlFragments['passwordExpired']
 			
 			done(null, retObj)
 
