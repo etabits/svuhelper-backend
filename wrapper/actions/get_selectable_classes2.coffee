@@ -28,6 +28,7 @@ module.exports = {
       foundChosen = false
 
       for c in sData
+        #continue if not c
         cInfo = c.label.match(/^\[ (\d+) \/ (\d+) \] C(\d+)-\w+_(\w+)_C\d+_(?:F|S)\d{2}$/i)
         if not cInfo
           chosenClass = c
@@ -46,7 +47,7 @@ module.exports = {
           totalCapacity: parseInt(cInfo[2])
           number: parseInt(cInfo[3])
           #course: etabits.data.coursesByCode[cInfo[4]]
-          chosen: chosenClass.id==c.id
+          chosen: chosenClass && chosenClass.id==c.id
         }
       if not foundChosen
         result.push {
