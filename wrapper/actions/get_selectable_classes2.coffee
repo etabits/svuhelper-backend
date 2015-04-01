@@ -49,7 +49,7 @@ module.exports = {
           #course: etabits.data.coursesByCode[cInfo[4]]
           chosen: chosenClass && chosenClass.id==c.id
         }
-      if not foundChosen
+      if not foundChosen && chosenClass
         result.push {
           id: parseInt(chosenClass.id)
           totalEnrolled: 100
