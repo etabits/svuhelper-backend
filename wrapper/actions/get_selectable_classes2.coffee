@@ -34,8 +34,12 @@ module.exports = {
           chosenClass.info = chosenClass.label.match(/^\w+_\w+_C(\d+)_(?:F|S)\d{2}$/i)
           continue
 
-        if chosenClass && chosenClass.id==c.id
-          foundChosen = true
+        try
+          if chosenClass.id==c.id
+            foundChosen = true
+        catch e
+          console.log chosenClass, c
+
         result.push {
           id: parseInt(c.id)
           totalEnrolled: parseInt(cInfo[1])
