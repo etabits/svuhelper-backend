@@ -34,7 +34,7 @@ module.exports = {
           chosenClass.info = chosenClass.label.match(/^\w+_\w+_C(\d+)_(?:F|S)\d{2}$/i)
           continue
 
-        if chosenClass.id==c.id
+        if chosenClass && chosenClass.id==c.id
           foundChosen = true
         result.push {
           id: parseInt(c.id)
