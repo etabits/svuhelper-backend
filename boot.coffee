@@ -29,6 +29,7 @@ global.etabits = {
     terms: [
       {"id": 26, "code": "S14" }
       {"id": 27, "code": "F14" }
+      {"id": 28, "code": "S15" }
     ]
     programs: {}
     allCoursesIds: []
@@ -37,8 +38,8 @@ global.etabits = {
     activeUsers: 0
   }
   settings: {
-    currentTerm: {"_id": 27, "code": "F14" }
-    previousTerm: {"_id": 26, "code": "S14" }
+    currentTerm:  {"id": 28, "code": "S15" }
+    previousTerm: {"id": 27, "code": "F14" }
   }
   htmlFragments: {}
 }
