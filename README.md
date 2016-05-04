@@ -3,3 +3,5 @@ An application that provides an API (HTTP/JSON) around SVU (Syrian Virtual Unive
 
 # You need
 * [Node.js](https://nodejs.org/en/)
+* [MongoDB](https://www.mongodb.org/)
+* [CoffeeScript](http://coffeescript.org/)
