@@ -16,3 +16,10 @@ An application that provides an API (HTTP/JSON) around SVU (Syrian Virtual Unive
 * When we get the response (html page from SVU servers), we convert the page to utf-8 with the help of [encoding](https://www.npmjs.com/package/encoding), and then select valuable html bits using [cheerio](https://www.npmjs.com/package/cheerio)
 * We use [mongoose](https://www.npmjs.com/package/mongoose) models to read/write from MongoDB
 * We also use [async], [lodash], and [debug].
+
+## Live App
+The app is hosted at http://api.helper.svu.etabits.com, current API version (0.1) prefix is `/v0p1`.
+
+Here is an example request (GET), using the `/hello` endpoint:
+
+http://api.helper.svu.etabits.com/v0p1/hello?versionCode=619
