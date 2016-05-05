@@ -17,6 +17,9 @@ An application that provides an API (HTTP/JSON) around SVU (Syrian Virtual Unive
 * We use [mongoose](https://www.npmjs.com/package/mongoose) models to read/write from MongoDB
 * We also use [async], [lodash], and [debug].
 
+## A diagram on how things go
+![SVU-Helper diagram: Backend](http://www.etabits.com/software/svu-helper/diagram-backend.png)
+
 ## Live App
 The app is hosted at http://api.helper.svu.etabits.com, current API version (0.1) prefix is `/v0p1`.
 
