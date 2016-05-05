@@ -2,12 +2,12 @@
 An application that provides an API (HTTP/JSON) around SVU (Syrian Virtual University) website, by scraping their HTML.
 *Read more on [Web scraping](https://en.wikipedia.org/wiki/Web_scraping)*
 
-# You need
+## You need
 * [Node.js](https://nodejs.org/en/)
 * [MongoDB](https://www.mongodb.org/)
 * [CoffeeScript](http://coffeescript.org/)
 
-# How we do it... (+Node.js modules used)
+## How we do it... (+Node.js modules used)
 * [express](https://www.npmjs.com/package/express) is used as our framework
 * [body-parser](https://www.npmjs.com/package/body-parser) is used to parse incoming json bodies (an express middleware)
 * We use [request](https://www.npmjs.com/package/request) to execute requests against SVU servers, on behalf of the user:
